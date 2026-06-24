@@ -1,0 +1,278 @@
+{% extends "main/base.html"%}
+
+{% block content %}
+<!-- spacer for fixed navbar -->
+<div class="h-20"></div>
+
+<!-- ============ HERO (search-first) ============ -->
+<section class="relative overflow-hidden bg-parchment">
+  <div class="absolute inset-0 opacity-[0.06]" style="background-image: radial-gradient(circle at 20% 20%, #C1684C 0, transparent 45%), radial-gradient(circle at 85% 75%, #6B7A5E 0, transparent 40%);"></div>
+
+  <div class="relative max-w-7xl mx-auto px-6 lg:px-10 pt-20 pb-28 lg:pt-28 lg:pb-36">
+    <div class="text-center max-w-3xl mx-auto">
+      <span class="section-tag justify-center">Across Nepal</span>
+      <h1 class="font-display mt-7 text-[2.6rem] sm:text-6xl lg:text-7xl font-medium italic leading-[1.05] tracking-tight">
+        Photographers worth <span class="text-terracotta">remembering</span> the moment by.
+      </h1>
+      <p class="mt-6 text-lg text-bark max-w-xl mx-auto leading-relaxed">
+        Browse curated portfolios from Kathmandu to Pokhara and beyond. Compare style, price, and availability — then book directly.
+      </p>
+    </div>
+
+    <!-- Search "ticket stub" bar -->
+    <div class="mt-12 max-w-4xl mx-auto bg-cream hairline shadow-[0_24px_50px_-20px_rgba(59,43,31,0.18)]">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 lg:divide-x" style="border-color: rgba(184,149,106,0.2);">
+
+        <div class="px-7 py-6">
+          <label class="section-tag !text-[10px] mb-2">Category</label>
+          <div class="flex items-center gap-2.5 mt-2">
+            <i class="fa fa-th-large text-clay"></i>
+            <select class="w-full bg-transparent font-display text-lg italic focus:outline-none">
+              <option>Wedding</option>
+              <option>Portrait</option>
+              <option>Newborn / Family</option>
+              <option>Fashion</option>
+              <option>Travel</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="px-7 py-6">
+          <label class="section-tag !text-[10px] mb-2">Location</label>
+          <div class="flex items-center gap-2.5 mt-2">
+            <i class="fa fa-map-marker text-clay"></i>
+            <input type="text" placeholder="Kathmandu, Pokhara…" class="w-full bg-transparent font-display text-lg italic placeholder:text-bark/50 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="px-7 py-6">
+          <label class="section-tag !text-[10px] mb-2">Date</label>
+          <div class="flex items-center gap-2.5 mt-2">
+            <i class="fa fa-calendar text-clay"></i>
+            <input type="text" placeholder="Add a date" class="w-full bg-transparent font-display text-lg italic placeholder:text-bark/50 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="p-3 flex items-center">
+          <button class="btn-primary w-full h-full min-h-[56px] flex items-center justify-center gap-2 text-[13px] font-medium uppercase tracking-wider">
+            <i class="fa fa-search"></i> Search
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="mt-8 flex flex-wrap justify-center gap-x-10 gap-y-2 text-[13px] text-bark uppercase tracking-wide font-medium">
+      <span><i class="fa fa-check text-terracotta mr-1.5"></i>500+ verified photographers</span>
+      <span><i class="fa fa-check text-terracotta mr-1.5"></i>Instant booking</span>
+      <span><i class="fa fa-check text-terracotta mr-1.5"></i>Money-back guarantee</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OFFERS (dark editorial section) ============ -->
+<section id="offers" class="bg-espresso-deep py-24">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-14">
+      <div>
+        <span class="section-tag">Limited-Time</span>
+        <h2 class="font-display text-4xl lg:text-5xl italic font-medium text-cream mt-4">Seasonal offers</h2>
+      </div>
+      <a href="#" class="hidden sm:inline-flex items-center gap-2 text-terracotta text-[13px] font-medium uppercase tracking-wider hover:gap-3">
+        See all offers <i class="fa fa-long-arrow-right"></i>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+      <!-- Offer 1 -->
+      <div class="dark-card-glow border p-9 flex flex-col" style="border-color: rgba(184,149,106,0.2); background: rgba(193,104,76,0.04);">
+        <i class="fa fa-snowflake-o text-2xl text-terracotta mb-6"></i>
+        <h3 class="font-display text-2xl italic font-medium text-cream mb-3">Winter Wedding Week</h3>
+        <p class="text-[14px] text-clay leading-relaxed flex-1">A full-day wedding photographer this week, with every featured package marked down.</p>
+        <div class="mt-7 flex items-center justify-between border-t pt-5" style="border-color: rgba(184,149,106,0.2);">
+          <span class="font-display text-3xl italic font-medium text-cream">20% off</span>
+          <span class="text-[11px] font-medium uppercase tracking-wider text-bark">Ends in 6 days</span>
+        </div>
+      </div>
+
+      <!-- Offer 2 -->
+      <div class="dark-card-glow border p-9 flex flex-col" style="border-color: rgba(184,149,106,0.2); background: rgba(193,104,76,0.04);">
+        <i class="fa fa-child text-2xl text-terracotta mb-6"></i>
+        <h3 class="font-display text-2xl italic font-medium text-cream mb-3">Festive Family Sets</h3>
+        <p class="text-[14px] text-clay leading-relaxed flex-1">Holiday-ready family and newborn sessions, with two bonus edited portraits included.</p>
+        <div class="mt-7 flex items-center justify-between border-t pt-5" style="border-color: rgba(184,149,106,0.2);">
+          <span class="font-display text-3xl italic font-medium text-cream">+2 edits</span>
+          <span class="text-[11px] font-medium uppercase tracking-wider text-bark">This month</span>
+        </div>
+      </div>
+
+      <!-- Offer 3 -->
+      <div class="dark-card-glow border p-9 flex flex-col" style="border-color: rgba(184,149,106,0.2); background: rgba(193,104,76,0.04);">
+        <i class="fa fa-map-signs text-2xl text-terracotta mb-6"></i>
+        <h3 class="font-display text-2xl italic font-medium text-cream mb-3">Himalayan Travel Bundle</h3>
+        <p class="text-[14px] text-clay leading-relaxed flex-1">Bundle two travel sessions on the same trip and split the booking fee between them.</p>
+        <div class="mt-7 flex items-center justify-between border-t pt-5" style="border-color: rgba(184,149,106,0.2);">
+          <span class="font-display text-3xl italic font-medium text-cream">Save 15%</span>
+          <span class="text-[11px] font-medium uppercase tracking-wider text-bark">Few spots left</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ LISTINGS (photographers) ============ -->
+<section id="listings" class="py-24 bg-cream">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12">
+      <div>
+        <span class="section-tag">Top Rated</span>
+        <h2 class="font-display text-4xl lg:text-5xl italic font-medium mt-4">Photographers people keep rebooking</h2>
+      </div>
+
+      <div class="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
+        <button class="px-5 py-2.5 btn-secondary text-[12px] font-medium uppercase tracking-wider whitespace-nowrap">All</button>
+        <button class="px-5 py-2.5 hairline bg-cream text-[12px] font-medium uppercase tracking-wider whitespace-nowrap hover:border-terracotta">Wedding</button>
+        <button class="px-5 py-2.5 hairline bg-cream text-[12px] font-medium uppercase tracking-wider whitespace-nowrap hover:border-terracotta">Portrait</button>
+        <button class="px-5 py-2.5 hairline bg-cream text-[12px] font-medium uppercase tracking-wider whitespace-nowrap hover:border-terracotta">Family</button>
+        <button class="px-5 py-2.5 hairline bg-cream text-[12px] font-medium uppercase tracking-wider whitespace-nowrap hover:border-terracotta">Fashion</button>
+        <button class="px-5 py-2.5 hairline bg-cream text-[12px] font-medium uppercase tracking-wider whitespace-nowrap hover:border-terracotta">Travel</button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+      <!-- Card 1 -->
+      <article class="card-lift bg-parchment hairline overflow-hidden">
+        <div class="relative h-52" style="background: linear-gradient(135deg, #B8956A, #7A5C3E);">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <i class="fa fa-camera-retro text-cream/25 text-5xl"></i>
+          </div>
+          <span class="absolute top-4 left-4 bg-cream text-[10px] font-medium uppercase tracking-wider px-3 py-1.5 text-espresso">Wedding</span>
+          <button class="absolute top-4 right-4 w-8 h-8 bg-cream/90 flex items-center justify-center text-espresso hover:text-terracotta" aria-label="Save">
+            <i class="fa fa-heart-o"></i>
+          </button>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center justify-between">
+            <h3 class="font-display text-xl italic font-medium">Sarita Gurung</h3>
+            <span class="flex items-center gap-1 text-sm font-medium">
+              <i class="fa fa-star text-terracotta"></i> 4.9
+            </span>
+          </div>
+          <p class="text-[13px] text-bark mt-1.5 uppercase tracking-wide">Kathmandu · 8 yrs</p>
+          <div class="flex items-center justify-between mt-5 pt-5 border-t" style="border-color: rgba(184,149,106,0.2);">
+            <span class="font-display text-lg italic font-medium">Rs 15,000<span class="text-[12px] text-bark font-sans not-italic font-normal"> /shoot</span></span>
+            <a href="#" class="text-terracotta text-[12px] font-medium uppercase tracking-wider hover:underline">View profile</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 2 -->
+      <article class="card-lift bg-parchment hairline overflow-hidden">
+        <div class="relative h-52" style="background: linear-gradient(135deg, #C1684C, #A85339);">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <i class="fa fa-camera-retro text-cream/25 text-5xl"></i>
+          </div>
+          <span class="absolute top-4 left-4 bg-cream text-[10px] font-medium uppercase tracking-wider px-3 py-1.5 text-espresso">Portrait</span>
+          <button class="absolute top-4 right-4 w-8 h-8 bg-cream/90 flex items-center justify-center text-espresso hover:text-terracotta" aria-label="Save">
+            <i class="fa fa-heart-o"></i>
+          </button>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center justify-between">
+            <h3 class="font-display text-xl italic font-medium">Bikash Shrestha</h3>
+            <span class="flex items-center gap-1 text-sm font-medium">
+              <i class="fa fa-star text-terracotta"></i> 4.8
+            </span>
+          </div>
+          <p class="text-[13px] text-bark mt-1.5 uppercase tracking-wide">Pokhara · 5 yrs</p>
+          <div class="flex items-center justify-between mt-5 pt-5 border-t" style="border-color: rgba(184,149,106,0.2);">
+            <span class="font-display text-lg italic font-medium">Rs 8,500<span class="text-[12px] text-bark font-sans not-italic font-normal"> /shoot</span></span>
+            <a href="#" class="text-terracotta text-[12px] font-medium uppercase tracking-wider hover:underline">View profile</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 3 -->
+      <article class="card-lift bg-parchment hairline overflow-hidden">
+        <div class="relative h-52" style="background: linear-gradient(135deg, #9DAF8E, #6B7A5E);">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <i class="fa fa-camera-retro text-cream/25 text-5xl"></i>
+          </div>
+          <span class="absolute top-4 left-4 bg-cream text-[10px] font-medium uppercase tracking-wider px-3 py-1.5 text-espresso">Family</span>
+          <button class="absolute top-4 right-4 w-8 h-8 bg-cream/90 flex items-center justify-center text-espresso hover:text-terracotta" aria-label="Save">
+            <i class="fa fa-heart-o"></i>
+          </button>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center justify-between">
+            <h3 class="font-display text-xl italic font-medium">Anjali Tamang</h3>
+            <span class="flex items-center gap-1 text-sm font-medium">
+              <i class="fa fa-star text-terracotta"></i> 5.0
+            </span>
+          </div>
+          <p class="text-[13px] text-bark mt-1.5 uppercase tracking-wide">Lalitpur · 6 yrs</p>
+          <div class="flex items-center justify-between mt-5 pt-5 border-t" style="border-color: rgba(184,149,106,0.2);">
+            <span class="font-display text-lg italic font-medium">Rs 6,000<span class="text-[12px] text-bark font-sans not-italic font-normal"> /shoot</span></span>
+            <a href="#" class="text-terracotta text-[12px] font-medium uppercase tracking-wider hover:underline">View profile</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 4 -->
+      <article class="card-lift bg-parchment hairline overflow-hidden">
+        <div class="relative h-52" style="background: linear-gradient(135deg, #7A5C3E, #3B2B1F);">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <i class="fa fa-camera-retro text-cream/25 text-5xl"></i>
+          </div>
+          <span class="absolute top-4 left-4 bg-cream text-[10px] font-medium uppercase tracking-wider px-3 py-1.5 text-espresso">Travel</span>
+          <button class="absolute top-4 right-4 w-8 h-8 bg-cream/90 flex items-center justify-center text-espresso hover:text-terracotta" aria-label="Save">
+            <i class="fa fa-heart-o"></i>
+          </button>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center justify-between">
+            <h3 class="font-display text-xl italic font-medium">Rajesh Magar</h3>
+            <span class="flex items-center gap-1 text-sm font-medium">
+              <i class="fa fa-star text-terracotta"></i> 4.7
+            </span>
+          </div>
+          <p class="text-[13px] text-bark mt-1.5 uppercase tracking-wide">Chitwan · 4 yrs</p>
+          <div class="flex items-center justify-between mt-5 pt-5 border-t" style="border-color: rgba(184,149,106,0.2);">
+            <span class="font-display text-lg italic font-medium">Rs 12,000<span class="text-[12px] text-bark font-sans not-italic font-normal"> /shoot</span></span>
+            <a href="#" class="text-terracotta text-[12px] font-medium uppercase tracking-wider hover:underline">View profile</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="text-center mt-14">
+      <a href="#" class="inline-flex items-center gap-2.5 px-8 py-4 hairline text-[13px] font-medium uppercase tracking-wider hover:bg-espresso hover:text-cream hover:border-espresso">
+        View all photographers <i class="fa fa-arrow-right"></i>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ CTA STRIP ============ -->
+<section class="bg-espresso">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-16 flex flex-col md:flex-row items-center justify-between gap-7 text-cream">
+    <div>
+      <span class="section-tag">For Photographers</span>
+      <h3 class="font-display text-3xl lg:text-4xl italic font-medium mt-3">Are you a photographer?</h3>
+      <p class="text-clay mt-2">List your portfolio and start getting bookings this week.</p>
+    </div>
+    <a href="#" class="btn-primary px-8 py-4 text-[13px] font-medium uppercase tracking-wider whitespace-nowrap">
+      Join PhotoPlat <i class="fa fa-arrow-right ml-2"></i>
+    </a>
+  </div>
+</section>
+
+{% endblock content %}
+
+{% endextends %}
