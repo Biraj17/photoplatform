@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sarita Gurung — Wedding Photographer | PhotoPlat</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          cream: '#F5F0E8',
+          parchment: '#EDE5D4',
+          sand: '#D9CABA',
+          terracotta: { DEFAULT: '#C1684C', dark: '#A85339' },
+          espresso: { DEFAULT: '#3B2B1F', deep: '#2A1E15' },
+          bark: '#7A5C3E',
+          clay: '#B8956A',
+          moss: '#6B7A5E',
+          sage: '#9DAF8E'
+        },
+        fontFamily: {
+          display: ['"Cormorant Garamond"', 'serif'],
+          sans: ['Jost', 'sans-serif']
+        },
+        borderRadius: { DEFAULT: '2px' }
+      }
+    }
+  }
+</script>
+
+<style>
+  body { font-family: 'Jost', sans-serif; background: #F5F0E8; color: #3B2B1F; }
+  .font-display { font-family: 'Cormorant Garamond', serif; }
+
+  .grain-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 999; opacity: 0.03; mix-blend-mode: multiply;
+  }
+
+  .navbar-glass {
+    background: rgba(245, 240, 232, 0.92);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+
+  .section-tag {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    font-family: 'Jost', sans-serif; font-size: 0.72rem; font-weight: 600;
+    letter-spacing: 0.22em; text-transform: uppercase; color: #C1684C;
+  }
+  .section-tag::before {
+    content: ""; display: inline-block; width: 22px; height: 1px; background: #C1684C;
+  }
+
+  .hairline { border: 1px solid rgba(184, 149, 106, 0.2); }
+
+  .card-lift { transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
+  .card-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 18px 38px -12px rgba(59, 43, 31, 0.18);
+    border-color: rgba(193, 104, 76, 0.35);
+  }
+
+  .dark-card-glow { transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
+  .dark-card-glow:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 0 1px rgba(193, 104, 76, 0.3), 0 20px 40px -10px rgba(193, 104, 76, 0.15);
+    border-color: rgba(193, 104, 76, 0.4);
+  }
+
+  .gallery-item { overflow: hidden; cursor: pointer; }
+  .gallery-item .gallery-inner { transition: transform 0.5s ease; }
+  .gallery-item:hover .gallery-inner { transform: scale(1.06); }
+
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+
+  a, button, input, select { transition: all 0.2s ease; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 2px solid #C1684C; outline-offset: 2px;
+  }
+
+  .btn-primary { background: #C1684C; color: #F5F0E8; border-radius: 2px; }
+  .btn-primary:hover { background: #A85339; }
+  .btn-secondary { background: #3B2B1F; color: #F5F0E8; border-radius: 2px; }
+  .btn-secondary:hover { background: #2A1E15; }
+
+  /* Calendar */
+  .cal-day {
+    aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center;
+    font-size: 13px; cursor: pointer; border: 1px solid rgba(184,149,106,0.15);
+  }
+  .cal-day.available:hover { background: rgba(193,104,76,0.08); border-color: rgba(193,104,76,0.35); }
+  .cal-day.selected { background: #C1684C; color: #F5F0E8; border-color: #C1684C; }
+  .cal-day.unavailable { color: rgba(122,92,62,0.3); cursor: not-allowed; text-decoration: line-through; }
+  .cal-day.muted { color: rgba(122,92,62,0.25); }
+
+  /* Lightbox */
+  #lightbox { display: none; }
+  #lightbox.open { display: flex; }
+</style>
+</head>
+
+<body class="text-espresso antialiased">
+
+<svg class="grain-overlay" xmlns="http://www.w3.org/2000/svg">
+  <filter id="noiseFilter">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" result="noise"/>
+    <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.9 0"/>
+  </filter>
+  <rect width="100%" height="100%" filter="url(#noiseFilter)"/>
+</svg>
+
+<!-- ============ NAVBAR ============ -->
+<header class="fixed top-0 left-0 right-0 z-50 navbar-glass border-b" style="border-color: rgba(184,149,106,0.2);">
+  <nav class="max-w-7xl mx-auto px-6 lg:px-10 h-20 flex items-center justify-between">
+    <a href="photoplat.html" class="flex items-center gap-2.5">
+      <span class="w-9 h-9 flex items-center justify-center bg-espresso text-cream rounded">
+        <i class="fa fa-camera text-sm"></i>
+      </span>
+      <span class="font-display text-[26px] italic font-medium tracking-tight leading-none">PhotoPlat</span>
+    </a>
+
+    <div class="hidden lg:flex items-center gap-10 text-[13px] font-medium uppercase tracking-wider text-bark">
+      <a href="photoplat.html#listings" class="hover:text-terracotta">Photographers</a>
+      <a href="photoplat.html#offers" class="hover:text-terracotta">Offers</a>
+      <a href="#" class="hover:text-terracotta">How it works</a>
+      <a href="#" class="hover:text-terracotta">For Photographers</a>
+    </div>
+
+    <div class="hidden lg:flex items-center gap-5">
+      <a href="join.html" class="text-[13px] font-medium uppercase tracking-wider text-bark hover:text-terracotta">Log in</a>
+      <a href="join.html" class="btn-primary px-6 py-3 text-[13px] font-medium uppercase tracking-wider">List your work</a>
+    </div>
+
+    <button class="lg:hidden w-10 h-10 flex items-center justify-center text-lg text-espresso" aria-label="Open menu" onclick="document.getElementById('mobileMenu').classList.toggle('hidden')">
+      <i class="fa fa-bars"></i>
+    </button>
+  </nav>
+
+  <div id="mobileMenu" class="hidden lg:hidden border-t px-6 py-6 space-y-5 navbar-glass" style="border-color: rgba(184,149,106,0.2);">
+    <a href="photoplat.html#listings" class="block text-sm uppercase tracking-wider font-medium">Photographers</a>
+    <a href="photoplat.html#offers" class="block text-sm uppercase tracking-wider font-medium">Offers</a>
+    <a href="#" class="block text-sm uppercase tracking-wider font-medium">How it works</a>
+    <a href="#" class="block text-sm uppercase tracking-wider font-medium">For Photographers</a>
+    <div class="pt-3 flex flex-col gap-3">
+      <a href="join.html" class="text-center py-3 hairline text-sm font-medium uppercase tracking-wider">Log in</a>
+      <a href="join.html" class="btn-primary text-center py-3 text-sm font-medium uppercase tracking-wider">List your work</a>
+    </div>
+  </div>
+</header>
+
+<div class="h-20"></div>
+
+<!-- ============ COVER + HEADER ============ -->
+<section class="relative">
+  <div class="h-72 lg:h-96" style="background: linear-gradient(135deg, #B8956A, #7A5C3E);">
+    <div class="absolute inset-0 flex items-center justify-center">
+      <i class="fa fa-camera-retro text-cream/15 text-8xl"></i>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="relative -mt-16 flex flex-col sm:flex-row sm:items-end gap-6 pb-10">
+      <div class="w-32 h-32 bg-parchment hairline flex items-center justify-center shrink-0 shadow-[0_18px_38px_-12px_rgba(59,43,31,0.25)]">
+        <i class="fa fa-user text-4xl text-clay"></i>
+      </div>
+      <div class="flex-1 bg-cream/0 pb-1">
+        <div class="flex flex-wrap items-center gap-3">
+          <h1 class="font-display text-4xl lg:text-5xl italic font-medium">Sarita Gurung</h1>
+          <span class="bg-espresso text-cream text-[10px] font-medium uppercase tracking-wider px-3 py-1.5">Wedding</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-x-6 gap-y-1.5 mt-3 text-bark text-[14px]">
+          <span><i class="fa fa-map-marker text-terracotta mr-1.5"></i>Kathmandu, Nepal</span>
+          <span><i class="fa fa-star text-terracotta mr-1.5"></i>4.9 (128 reviews)</span>
+          <span><i class="fa fa-clock-o text-terracotta mr-1.5"></i>8 years experience</span>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <button class="w-11 h-11 hairline flex items-center justify-center hover:border-terracotta hover:text-terracotta" aria-label="Save">
+          <i class="fa fa-heart-o"></i>
+        </button>
+        <a href="#book" class="btn-primary px-7 py-3.5 text-[13px] font-medium uppercase tracking-wider">Check availability</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="max-w-7xl mx-auto px-6 lg:px-10 pb-24">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+
+    <!-- ============ MAIN COLUMN ============ -->
+    <div class="lg:col-span-2 space-y-16">
+
+      <!-- BIO -->
+      <div>
+        <span class="section-tag">About</span>
+        <p class="font-display text-2xl italic leading-relaxed mt-5 text-espresso">
+          "I believe a wedding photo should feel like a memory, not a pose."
+        </p>
+        <p class="text-bark leading-relaxed mt-4">
+          Based in Kathmandu, Sarita has spent eight years photographing weddings across Nepal — from intimate Newari ceremonies to large multi-day celebrations in Pokhara and the Terai. Her style blends candid documentary moments with quiet, editorial portraits, shot mostly in natural light. She works solo or with a second shooter depending on the size of your day.
+        </p>
+        <div class="flex flex-wrap gap-2 mt-5">
+          <span class="hairline px-3.5 py-2 text-[12px] uppercase tracking-wider text-bark">Documentary style</span>
+          <span class="hairline px-3.5 py-2 text-[12px] uppercase tracking-wider text-bark">Natural light</span>
+          <span class="hairline px-3.5 py-2 text-[12px] uppercase tracking-wider text-bark">Nepali & English</span>
+          <span class="hairline px-3.5 py-2 text-[12px] uppercase tracking-wider text-bark">Drone available</span>
+        </div>
+      </div>
+
+      <!-- PORTFOLIO GALLERY -->
+      <div>
+        <span class="section-tag">Portfolio</span>
+        <h2 class="font-display text-3xl italic font-medium mt-4 mb-6">Recent work</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3" id="galleryGrid">
+          <!-- gallery items generated via JS-friendly static markup -->
+          <div class="gallery-item hairline h-40 sm:h-48" onclick="openLightbox(0)">
+            <div class="gallery-inner w-full h-full flex items-center justify-center" style="background: linear-gradient(135deg,#D9CABA,#B8956A);"><i class="fa fa-image text-cream/40 text-2xl"></i></div>
+          </div>
+          <div class="gallery-item hairline h-40 sm:h-48" onclick="openLightbox(1)">
+            <div class="gallery-inner w-full h-full flex items-center justify-center" style="background: linear-gradient(135deg,#C1684C,#A85339);"><i class="fa fa-image text-cream/40 text-2xl"></i></div>
+          </div>
+          <div class="gallery-item hairline h-40 sm:h-48" onclick="openLightbox(2)">
+            <div class="gallery-inner w-full h-full flex items-center justify-center" style="background: linear-gradient(135deg,#9DAF8E,#6B7A5E);"><i class="fa fa-image text-cream/40 text-2xl"></i></div>
+          </div>
+          <div class="gallery-item hairline h-40 sm:h-48" onclick="openLightbox(3)">
+            <div class="gallery-inner w-full h-full flex items-center justify-center" style="background: linear-gradient(135deg,#7A5C3E,#3B2B1F);"><i class="fa fa-image text-cream/40 text-2xl"></i></div>
+          </div>
+          <div class="gallery-item hairline h-40 sm:h-48" onclick="openLightbox(4)">
+            <div class="gallery-inner w-full h-full flex items-center justify-center" style="background: linear-gradient(135deg,#B8956A,#7A5C3E);"><i class="fa fa-image text-cream/40 text-2xl"></i></div>
+          </div>
+          <div class="gallery-item hairline h-40 sm:h-48" onclick="openLightbox(5)">
+            <div class="gallery-inner w-full h-full flex items-center justify-center" style="background: linear-gradient(135deg,#D9CABA,#7A5C3E);"><i class="fa fa-image text-cream/40 text-2xl"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PACKAGES / PRICING -->
+      <div>
+        <span class="section-tag">Packages</span>
+        <h2 class="font-display text-3xl italic font-medium mt-4 mb-6">Pricing</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+
+          <div class="card-lift bg-parchment hairline p-7 flex flex-col">
+            <h3 class="font-display text-xl italic font-medium">Essential</h3>
+            <p class="text-[13px] text-bark mt-1.5">4 hours · 1 photographer</p>
+            <span class="font-display text-3xl italic font-medium mt-5">Rs 25,000</span>
+            <ul class="text-[13px] text-bark space-y-2 mt-5 flex-1">
+              <li><i class="fa fa-check text-terracotta mr-2"></i>200+ edited photos</li>
+              <li><i class="fa fa-check text-terracotta mr-2"></i>Online gallery</li>
+              <li><i class="fa fa-check text-terracotta mr-2"></i>7-day delivery</li>
+            </ul>
+            <a href="#book" class="mt-6 text-center py-3 hairline text-[12px] font-medium uppercase tracking-wider hover:bg-espresso hover:text-cream hover:border-espresso">Select</a>
+          </div>
+
+          <div class="card-lift bg-espresso text-cream hairline p-7 flex flex-col relative" style="border-color: rgba(193,104,76,0.4);">
+            <span class="absolute -top-3 left-7 bg-terracotta text-cream text-[10px] font-medium uppercase tracking-wider px-3 py-1">Most booked</span>
+            <h3 class="font-display text-xl italic font-medium">Signature</h3>
+            <p class="text-[13px] text-clay mt-1.5">8 hours · 2 photographers</p>
+            <span class="font-display text-3xl italic font-medium mt-5">Rs 55,000</span>
+            <ul class="text-[13px] text-clay space-y-2 mt-5 flex-1">
+              <li><i class="fa fa-check text-terracotta mr-2"></i>500+ edited photos</li>
+              <li><i class="fa fa-check text-terracotta mr-2"></i>Engagement mini-session</li>
+              <li><i class="fa fa-check text-terracotta mr-2"></i>Printed album</li>
+              <li><i class="fa fa-check text-terracotta mr-2"></i>5-day delivery</li>
+            </ul>
+            <a href="#book" class="btn-primary mt-6 text-center py-3 text-[12px] font-medium uppercase tracking-wider">Select</a>
+          </div>
+
+          <div class="card-lift bg-parchment hairline p-7 flex flex-col">
+            <h3 class="font-display text-xl italic font-medium">Full Day</h3>
+            <p class="text-[13px] text-bark mt-1.5">12 hours · 2 photographers</p>
+            <span class="font-display text-3xl italic font-medium mt-5">Rs 85,000</span>
+            <ul class="text-[13px] text-bark space-y-2 mt-5 flex-1">
+              <li><i class="fa fa-check text-terracotta mr-2"></i>Full event coverage</li>
+              <li><i class="fa fa-check text-terracotta mr-2"></i>Drone footage</li>
+              <li><i class="fa fa-check text-terracotta mr-2"></i>Printed album + box</li>
+              <li><i class="fa fa-check text-terracotta mr-2"></i>3-day delivery</li>
+            </ul>
+            <a href="#book" class="mt-6 text-center py-3 hairline text-[12px] font-medium uppercase tracking-wider hover:bg-espresso hover:text-cream hover:border-espresso">Select</a>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- REVIEWS -->
+      <div>
+        <span class="section-tag">Reviews</span>
+        <div class="flex items-center justify-between mt-4 mb-6">
+          <h2 class="font-display text-3xl italic font-medium">What clients say</h2>
+          <span class="flex items-center gap-1.5 font-display text-2xl italic font-medium">
+            <i class="fa fa-star text-terracotta text-lg"></i> 4.9
+          </span>
+        </div>
+
+        <div class="space-y-5">
+
+          <div class="hairline bg-parchment p-6">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-sand flex items-center justify-center"><i class="fa fa-user text-bark"></i></div>
+                <div>
+                  <p class="font-medium text-[14px]">Nisha & Pemba</p>
+                  <p class="text-[12px] text-bark">Wedding · Kathmandu</p>
+                </div>
+              </div>
+              <span class="text-terracotta text-[13px]"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></span>
+            </div>
+            <p class="text-[14px] text-bark leading-relaxed mt-4">Sarita made our families feel completely at ease all day. The candid shots captured moments we didn't even know happened.</p>
+          </div>
+
+          <div class="hairline bg-parchment p-6">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-sand flex items-center justify-center"><i class="fa fa-user text-bark"></i></div>
+                <div>
+                  <p class="font-medium text-[14px]">Suman R.</p>
+                  <p class="text-[12px] text-bark">Engagement · Pokhara</p>
+                </div>
+              </div>
+              <span class="text-terracotta text-[13px]"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span>
+            </div>
+            <p class="text-[14px] text-bark leading-relaxed mt-4">Punctual, calm, and the gallery was ready well before the promised date. Would book again without hesitation.</p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============ SIDEBAR: BOOKING CALENDAR ============ -->
+    <div class="lg:col-span-1">
+      <div id="book" class="hairline bg-parchment p-7 sticky top-28">
+        <span class="section-tag">Book Sarita</span>
+        <h3 class="font-display text-2xl italic font-medium mt-4">Check availability</h3>
+
+        <div class="flex items-center justify-between mt-6 mb-3">
+          <button class="w-8 h-8 hairline flex items-center justify-center hover:border-terracotta hover:text-terracotta" aria-label="Previous month"><i class="fa fa-chevron-left text-xs"></i></button>
+          <span class="font-display italic text-lg">February 2026</span>
+          <button class="w-8 h-8 hairline flex items-center justify-center hover:border-terracotta hover:text-terracotta" aria-label="Next month"><i class="fa fa-chevron-right text-xs"></i></button>
+        </div>
+
+        <div class="grid grid-cols-7 gap-1.5 text-center text-[11px] text-bark uppercase tracking-wide mb-2">
+          <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+        </div>
+
+        <div class="grid grid-cols-7 gap-1.5" id="calendarGrid">
+          <span class="cal-day muted"></span><span class="cal-day muted"></span>
+          <span class="cal-day available" data-day="1" onclick="selectDay(this)">1</span>
+          <span class="cal-day available" data-day="2" onclick="selectDay(this)">2</span>
+          <span class="cal-day unavailable">3</span>
+          <span class="cal-day available" data-day="4" onclick="selectDay(this)">4</span>
+          <span class="cal-day available" data-day="5" onclick="selectDay(this)">5</span>
+
+          <span class="cal-day available" data-day="6" onclick="selectDay(this)">6</span>
+          <span class="cal-day unavailable">7</span>
+          <span class="cal-day unavailable">8</span>
+          <span class="cal-day available" data-day="9" onclick="selectDay(this)">9</span>
+          <span class="cal-day available" data-day="10" onclick="selectDay(this)">10</span>
+          <span class="cal-day available" data-day="11" onclick="selectDay(this)">11</span>
+          <span class="cal-day available" data-day="12" onclick="selectDay(this)">12</span>
+
+          <span class="cal-day available" data-day="13" onclick="selectDay(this)">13</span>
+          <span class="cal-day available" data-day="14" onclick="selectDay(this)">14</span>
+          <span class="cal-day unavailable">15</span>
+          <span class="cal-day unavailable">16</span>
+          <span class="cal-day available" data-day="17" onclick="selectDay(this)">17</span>
+          <span class="cal-day available" data-day="18" onclick="selectDay(this)">18</span>
+          <span class="cal-day available" data-day="19" onclick="selectDay(this)">19</span>
+
+          <span class="cal-day available" data-day="20" onclick="selectDay(this)">20</span>
+          <span class="cal-day available" data-day="21" onclick="selectDay(this)">21</span>
+          <span class="cal-day available" data-day="22" onclick="selectDay(this)">22</span>
+          <span class="cal-day unavailable">23</span>
+          <span class="cal-day unavailable">24</span>
+          <span class="cal-day available" data-day="25" onclick="selectDay(this)">25</span>
+          <span class="cal-day available" data-day="26" onclick="selectDay(this)">26</span>
+
+          <span class="cal-day available" data-day="27" onclick="selectDay(this)">27</span>
+          <span class="cal-day available" data-day="28" onclick="selectDay(this)">28</span>
+        </div>
+
+        <div class="flex items-center gap-4 mt-5 text-[11px] text-bark uppercase tracking-wide">
+          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 hairline inline-block"></span>Open</span>
+          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 inline-block" style="background:#C1684C;"></span>Selected</span>
+          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 inline-block opacity-30" style="background:#7A5C3E;"></span>Booked</span>
+        </div>
+
+        <p id="selectedDateLabel" class="text-[13px] text-bark mt-5 italic font-display text-base">Select a date to continue</p>
+
+        <button class="btn-primary w-full mt-4 py-3.5 text-[13px] font-medium uppercase tracking-wider">
+          Request to book
+        </button>
+        <p class="text-[12px] text-bark text-center mt-3">You won't be charged yet</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ LIGHTBOX ============ -->
+<div id="lightbox" class="fixed inset-0 z-[1000] items-center justify-center p-6" style="background: rgba(42,30,21,0.92);" onclick="closeLightbox(event)">
+  <button class="absolute top-6 right-6 w-11 h-11 hairline text-cream flex items-center justify-center hover:border-terracotta hover:text-terracotta" onclick="closeLightbox(event)" aria-label="Close" style="border-color: rgba(245,240,232,0.3);">
+    <i class="fa fa-times"></i>
+  </button>
+  <div class="w-full max-w-3xl h-[70vh] flex items-center justify-center" id="lightboxContent" style="background: linear-gradient(135deg,#C1684C,#A85339);">
+    <i class="fa fa-image text-cream/30 text-7xl"></i>
+  </div>
+</div>
+
+<!-- ============ FOOTER ============ -->
+<footer class="bg-espresso-deep text-clay">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 pt-20 pb-10">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-12">
+      <div class="lg:col-span-2">
+        <div class="flex items-center gap-2.5">
+          <span class="w-9 h-9 flex items-center justify-center bg-cream text-espresso rounded">
+            <i class="fa fa-camera text-sm"></i>
+          </span>
+          <span class="font-display text-2xl italic font-medium text-cream">PhotoPlat</span>
+        </div>
+        <p class="text-[14px] mt-5 max-w-xs leading-relaxed">A curated marketplace for finding and booking trusted photographers across Nepal.</p>
+      </div>
+      <div>
+        <h4 class="text-cream text-[13px] font-medium uppercase tracking-wider mb-5">Explore</h4>
+        <ul class="space-y-3 text-[14px]">
+          <li><a href="photoplat.html#listings" class="hover:text-terracotta">All photographers</a></li>
+          <li><a href="photoplat.html#offers" class="hover:text-terracotta">Offers</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-cream text-[13px] font-medium uppercase tracking-wider mb-5">Company</h4>
+        <ul class="space-y-3 text-[14px]">
+          <li><a href="#" class="hover:text-terracotta">About PhotoPlat</a></li>
+          <li><a href="#" class="hover:text-terracotta">Careers</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-cream text-[13px] font-medium uppercase tracking-wider mb-5">Support</h4>
+        <ul class="space-y-3 text-[14px]">
+          <li><a href="#" class="hover:text-terracotta">Help center</a></li>
+          <li><a href="#" class="hover:text-terracotta">Contact us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t mt-14 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[12px]" style="border-color: rgba(184,149,106,0.15);">
+      <p>© 2026 PhotoPlat. All rights reserved.</p>
+      <div class="flex gap-6">
+        <a href="#" class="hover:text-terracotta">Privacy Policy</a>
+        <a href="#" class="hover:text-terracotta">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const galleryColors = [
+    ['#D9CABA','#B8956A'], ['#C1684C','#A85339'], ['#9DAF8E','#6B7A5E'],
+    ['#7A5C3E','#3B2B1F'], ['#B8956A','#7A5C3E'], ['#D9CABA','#7A5C3E']
+  ];
+
+  function openLightbox(i) {
+    const lb = document.getElementById('lightbox');
+    const content = document.getElementById('lightboxContent');
+    const [c1, c2] = galleryColors[i];
+    content.style.background = `linear-gradient(135deg, ${c1}, ${c2})`;
+    lb.classList.add('open');
+  }
+
+  function closeLightbox(e) {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+
+  function selectDay(el) {
+    document.querySelectorAll('.cal-day.selected').forEach(d => d.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('selectedDateLabel').textContent = `Selected: February ${el.dataset.day}, 2026`;
+  }
+</script>
+
+</body>
+</html>

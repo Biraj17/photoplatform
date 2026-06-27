@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Join PhotoPlat</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          cream: '#F5F0E8',
+          parchment: '#EDE5D4',
+          sand: '#D9CABA',
+          terracotta: { DEFAULT: '#C1684C', dark: '#A85339' },
+          espresso: { DEFAULT: '#3B2B1F', deep: '#2A1E15' },
+          bark: '#7A5C3E',
+          clay: '#B8956A',
+          moss: '#6B7A5E',
+          sage: '#9DAF8E'
+        },
+        fontFamily: {
+          display: ['"Cormorant Garamond"', 'serif'],
+          sans: ['Jost', 'sans-serif']
+        },
+        borderRadius: { DEFAULT: '2px' }
+      }
+    }
+  }
+</script>
+
+<style>
+  body { font-family: 'Jost', sans-serif; background: #F5F0E8; color: #3B2B1F; }
+  .font-display { font-family: 'Cormorant Garamond', serif; }
+
+  .grain-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 999; opacity: 0.03; mix-blend-mode: multiply;
+  }
+
+  .section-tag {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    font-family: 'Jost', sans-serif; font-size: 0.72rem; font-weight: 600;
+    letter-spacing: 0.22em; text-transform: uppercase; color: #C1684C;
+  }
+  .section-tag::before {
+    content: ""; display: inline-block; width: 22px; height: 1px; background: #C1684C;
+  }
+
+  .hairline { border: 1px solid rgba(184, 149, 106, 0.2); }
+
+  a, button, input { transition: all 0.2s ease; }
+  a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 2px solid #C1684C; outline-offset: 2px;
+  }
+
+  .btn-primary { background: #C1684C; color: #F5F0E8; border-radius: 2px; }
+  .btn-primary:hover { background: #A85339; }
+  .btn-primary:disabled { background: #D9CABA; cursor: not-allowed; }
+
+  .field-input {
+    width: 100%;
+    background: #F5F0E8;
+    border: 1px solid rgba(184,149,106,0.3);
+    border-radius: 2px;
+    padding: 0.85rem 1rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    color: #3B2B1F;
+  }
+  .field-input:focus {
+    outline: none;
+    border-color: #C1684C;
+    box-shadow: 0 0 0 3px rgba(193,104,76,0.12);
+  }
+  .field-input.field-error {
+    border-color: #C1684C;
+    box-shadow: 0 0 0 3px rgba(193,104,76,0.12);
+  }
+
+  .field-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #7A5C3E;
+    display: block;
+    margin-bottom: 0.6rem;
+  }
+
+  .error-msg { font-size: 12px; color: #C1684C; margin-top: 0.4rem; min-height: 14px; }
+
+  .strength-bar { height: 3px; flex: 1; background: rgba(184,149,106,0.2); }
+  .strength-bar.active-weak { background: #C1684C; }
+  .strength-bar.active-mid { background: #B8956A; }
+  .strength-bar.active-strong { background: #6B7A5E; }
+</style>
+</head>
+
+<body class="text-espresso antialiased">
+
+<svg class="grain-overlay" xmlns="http://www.w3.org/2000/svg">
+  <filter id="noiseFilter">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" result="noise"/>
+    <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.9 0"/>
+  </filter>
+  <rect width="100%" height="100%" filter="url(#noiseFilter)"/>
+</svg>
+
+<div class="min-h-screen grid lg:grid-cols-2">
+
+  <!-- LEFT: editorial panel -->
+  <div class="hidden lg:flex flex-col justify-between bg-espresso text-cream p-12 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-[0.08]" style="background-image: radial-gradient(circle at 25% 25%, #C1684C 0, transparent 45%), radial-gradient(circle at 80% 80%, #9DAF8E 0, transparent 40%);"></div>
+
+    <a href="photoplat.html" class="relative flex items-center gap-2.5">
+      <span class="w-9 h-9 flex items-center justify-center bg-cream text-espresso rounded">
+        <i class="fa fa-camera text-sm"></i>
+      </span>
+      <span class="font-display text-2xl italic font-medium">PhotoPlat</span>
+    </a>
+
+    <div class="relative max-w-md">
+      <span class="section-tag">Join The Platform</span>
+      <h1 class="font-display text-5xl italic font-medium mt-6 leading-[1.1]">
+        Your camera has stories worth booking.
+      </h1>
+      <p class="text-clay leading-relaxed mt-6">
+        Join 500+ photographers across Nepal building a steady stream of bookings — weddings, portraits, families, fashion, and travel.
+      </p>
+
+      <div class="flex items-center gap-8 mt-10">
+        <div>
+          <p class="font-display text-3xl italic font-medium">500+</p>
+          <p class="text-[12px] uppercase tracking-wider text-clay mt-1">Photographers</p>
+        </div>
+        <div>
+          <p class="font-display text-3xl italic font-medium">40+</p>
+          <p class="text-[12px] uppercase tracking-wider text-clay mt-1">Cities</p>
+        </div>
+        <div>
+          <p class="font-display text-3xl italic font-medium">4.9</p>
+          <p class="text-[12px] uppercase tracking-wider text-clay mt-1">Avg rating</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="relative text-[12px] text-clay">© 2026 PhotoPlat. All rights reserved.</p>
+  </div>
+
+  <!-- RIGHT: form -->
+  <div class="flex items-center justify-center p-6 sm:p-12">
+    <div class="w-full max-w-md">
+
+      <a href="photoplat.html" class="lg:hidden flex items-center gap-2.5 mb-10">
+        <span class="w-9 h-9 flex items-center justify-center bg-espresso text-cream rounded">
+          <i class="fa fa-camera text-sm"></i>
+        </span>
+        <span class="font-display text-2xl italic font-medium">PhotoPlat</span>
+      </a>
+
+      <span class="section-tag">Create Account</span>
+      <h2 class="font-display text-4xl italic font-medium mt-4">Join PhotoPlat</h2>
+      <p class="text-bark mt-2 text-[14px]">Already have an account? <a href="#" class="text-terracotta font-medium hover:underline">Log in</a></p>
+
+      <!-- Success state -->
+      <div id="successPanel" class="hidden hairline bg-parchment p-8 mt-8 text-center">
+        <i class="fa fa-check-circle text-terracotta text-3xl"></i>
+        <h3 class="font-display text-2xl italic font-medium mt-4">Welcome to PhotoPlat</h3>
+        <p class="text-bark text-[14px] mt-2">Your account has been created. You can now complete your photographer profile.</p>
+        <a href="photoplat.html" class="btn-primary inline-block mt-6 px-7 py-3 text-[13px] font-medium uppercase tracking-wider">Go to homepage</a>
+      </div>
+
+      <form id="signupForm" class="mt-8 space-y-5" novalidate>
+
+        <div>
+          <label class="field-label" for="fullName">Full Name</label>
+          <input class="field-input" type="text" id="fullName" name="fullName" placeholder="e.g. Sarita Gurung" autocomplete="name">
+          <p class="error-msg" id="err-fullName"></p>
+        </div>
+
+        <div>
+          <label class="field-label" for="email">Email Address</label>
+          <input class="field-input" type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email">
+          <p class="error-msg" id="err-email"></p>
+        </div>
+
+        <div>
+          <label class="field-label" for="password">Password</label>
+          <div class="relative">
+            <input class="field-input pr-11" type="password" id="password" name="password" placeholder="At least 8 characters" autocomplete="new-password">
+            <button type="button" class="absolute right-0 top-0 h-full w-11 flex items-center justify-center text-bark hover:text-terracotta" onclick="togglePassword('password', this)" aria-label="Show password">
+              <i class="fa fa-eye"></i>
+            </button>
+          </div>
+          <div class="flex gap-1.5 mt-2.5" id="strengthBars">
+            <span class="strength-bar"></span><span class="strength-bar"></span><span class="strength-bar"></span>
+          </div>
+          <p class="error-msg" id="err-password"></p>
+        </div>
+
+        <div>
+          <label class="field-label" for="confirmPassword">Confirm Password</label>
+          <div class="relative">
+            <input class="field-input pr-11" type="password" id="confirmPassword" name="confirmPassword" placeholder="Re-enter your password" autocomplete="new-password">
+            <button type="button" class="absolute right-0 top-0 h-full w-11 flex items-center justify-center text-bark hover:text-terracotta" onclick="togglePassword('confirmPassword', this)" aria-label="Show password">
+              <i class="fa fa-eye"></i>
+            </button>
+          </div>
+          <p class="error-msg" id="err-confirmPassword"></p>
+        </div>
+
+        <label class="flex items-start gap-3 text-[13px] text-bark pt-1">
+          <input type="checkbox" id="terms" class="mt-0.5 accent-[#C1684C]">
+          <span>I agree to PhotoPlat's <a href="#" class="text-terracotta hover:underline">Terms of Service</a> and <a href="#" class="text-terracotta hover:underline">Privacy Policy</a>.</span>
+        </label>
+        <p class="error-msg" id="err-terms"></p>
+
+        <button type="submit" class="btn-primary w-full py-3.5 text-[13px] font-medium uppercase tracking-wider mt-2">
+          Create account
+        </button>
+
+        <div class="flex items-center gap-3 pt-1">
+          <span class="flex-1 h-px" style="background: rgba(184,149,106,0.2);"></span>
+          <span class="text-[11px] uppercase tracking-wider text-bark">Or continue with</span>
+          <span class="flex-1 h-px" style="background: rgba(184,149,106,0.2);"></span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <button type="button" class="hairline py-3 text-[13px] font-medium flex items-center justify-center gap-2 hover:border-terracotta hover:text-terracotta">
+            <i class="fa fa-google"></i> Google
+          </button>
+          <button type="button" class="hairline py-3 text-[13px] font-medium flex items-center justify-center gap-2 hover:border-terracotta hover:text-terracotta">
+            <i class="fa fa-facebook"></i> Facebook
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function togglePassword(id, btn) {
+    const input = document.getElementById(id);
+    const icon = btn.querySelector('i');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.className = 'fa fa-eye-slash';
+    } else {
+      input.type = 'password';
+      icon.className = 'fa fa-eye';
+    }
+  }
+
+  const passwordInput = document.getElementById('password');
+  const bars = document.querySelectorAll('.strength-bar');
+
+  passwordInput.addEventListener('input', () => {
+    const val = passwordInput.value;
+    let score = 0;
+    if (val.length >= 8) score++;
+    if (/[A-Z]/.test(val) && /[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val) && val.length >= 10) score++;
+
+    bars.forEach((b, i) => {
+      b.className = 'strength-bar';
+      if (i < score) {
+        b.classList.add(score === 1 ? 'active-weak' : score === 2 ? 'active-mid' : 'active-strong');
+      }
+    });
+  });
+
+  function setError(fieldId, message) {
+    document.getElementById('err-' + fieldId).textContent = message;
+    const input = document.getElementById(fieldId);
+    if (input) input.classList.toggle('field-error', !!message);
+  }
+
+  document.getElementById('signupForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const fullName = document.getElementById('fullName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const terms = document.getElementById('terms').checked;
+
+    let valid = true;
+
+    if (fullName.length < 2) {
+      setError('fullName', 'Please enter your full name.');
+      valid = false;
+    } else setError('fullName', '');
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      setError('email', 'Please enter a valid email address.');
+      valid = false;
+    } else setError('email', '');
+
+    if (password.length < 8) {
+      setError('password', 'Password must be at least 8 characters.');
+      valid = false;
+    } else setError('password', '');
+
+    if (confirmPassword !== password || confirmPassword === '') {
+      setError('confirmPassword', 'Passwords do not match.');
+      valid = false;
+    } else setError('confirmPassword', '');
+
+    if (!terms) {
+      setError('terms', 'Please accept the Terms of Service to continue.');
+      valid = false;
+    } else setError('terms', '');
+
+    if (!valid) return;
+
+    // Demo behavior: no backend wired up yet — show success panel.
+    document.getElementById('signupForm').classList.add('hidden');
+    document.getElementById('successPanel').classList.remove('hidden');
+  });
+</script>
+
+</body>
+</html> 

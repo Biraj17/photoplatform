@@ -6,3 +6,6 @@ def home(request):
 
 def about(request):
     return render(request,"main/home.html")
+
+def profile_photographer(request):
+    return render(request,"main/photographer_profile.html")
