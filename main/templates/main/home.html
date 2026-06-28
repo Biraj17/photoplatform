@@ -5,7 +5,7 @@
 <div class="h-20"></div>
 
 <!-- ============ HERO (search-first) ============ -->
-<section class="relative overflow-hidden bg-parchment">
+<section id="how-it-works" class="relative overflow-hidden bg-parchment">
   <div class="absolute inset-0 opacity-[0.06]" style="background-image: radial-gradient(circle at 20% 20%, #C1684C 0, transparent 45%), radial-gradient(circle at 85% 75%, #6B7A5E 0, transparent 40%);"></div>
 
   <div class="relative max-w-7xl mx-auto px-6 lg:px-10 pt-20 pb-28 lg:pt-28 lg:pb-36">
@@ -78,7 +78,7 @@
         <span class="section-tag">Limited-Time</span>
         <h2 class="font-display text-4xl lg:text-5xl italic font-medium text-cream mt-4">Seasonal offers</h2>
       </div>
-      <a href="#" class="hidden sm:inline-flex items-center gap-2 text-terracotta text-[13px] font-medium uppercase tracking-wider hover:gap-3">
+      <a href="{% url 'offers_list' %}" class="hidden sm:inline-flex items-center gap-2 text-terracotta text-[13px] font-medium uppercase tracking-wider hover:gap-3">
         See all offers <i class="fa fa-long-arrow-right"></i>
       </a>
     </div>
@@ -251,7 +251,7 @@
     </div>
 
     <div class="text-center mt-14">
-      <a href="#" class="inline-flex items-center gap-2.5 px-8 py-4 hairline text-[13px] font-medium uppercase tracking-wider hover:bg-espresso hover:text-cream hover:border-espresso">
+      <a href="{% url 'photographers_list' %}" class="inline-flex items-center gap-2.5 px-8 py-4 hairline text-[13px] font-medium uppercase tracking-wider hover:bg-espresso hover:text-cream hover:border-espresso">
         View all photographers <i class="fa fa-arrow-right"></i>
       </a>
     </div>
@@ -267,7 +267,7 @@
       <h3 class="font-display text-3xl lg:text-4xl italic font-medium mt-3">Are you a photographer?</h3>
       <p class="text-clay mt-2">List your portfolio and start getting bookings this week.</p>
     </div>
-    <a href="#" class="btn-primary px-8 py-4 text-[13px] font-medium uppercase tracking-wider whitespace-nowrap">
+    <a href="{% url 'photographer_join_page' %}" class="btn-primary px-8 py-4 text-[13px] font-medium uppercase tracking-wider whitespace-nowrap">
       Join PhotoPlat <i class="fa fa-arrow-right ml-2"></i>
     </a>
   </div>

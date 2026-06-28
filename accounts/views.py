@@ -1,10 +1,22 @@
 from django.shortcuts import render
 
-# Create your views here.
+from .forms import PhotographerJoinForm
+
+
 def register(request):
-    print("this is register page")
-    return render(request, 'accounts/register.html')
+    return render(request, "accounts/register.html")
+
 
 def photographer_join(request):
-    
-    return render(request, 'accounts/photographer_join.html')
+    success = False
+    form = PhotographerJoinForm(request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        success = True
+        form = PhotographerJoinForm()
+
+    return render(request, "accounts/photographer_join.html", {
+        "form": form,
+        "success": success,
+    })

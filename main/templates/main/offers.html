@@ -1,0 +1,46 @@
+{% extends "main/base.html" %}
+
+{% block title %}Offers — PhotoPlat{% endblock %}
+
+{% block content %}
+<div class="h-20"></div>
+
+<section class="py-24 bg-espresso text-cream">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+
+    <div class="mb-12">
+      <span class="section-tag">Limited time</span>
+      <h1 class="font-display text-4xl lg:text-5xl italic font-medium mt-4">Current offers</h1>
+      <p class="text-clay mt-3 max-w-2xl leading-relaxed">
+        Save on shoots across Nepal. Each offer includes a discount, short description, and how long it runs.
+      </p>
+    </div>
+
+    {% if offers %}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for offer in offers %}
+          <article class="dark-card-glow border p-9 flex flex-col" style="border-color: rgba(184,149,106,0.2); background: rgba(193,104,76,0.04);">
+            <i class="fa {{ offer.icon }} text-2xl text-terracotta mb-6"></i>
+            <h2 class="font-display text-2xl italic font-medium text-cream mb-3">{{ offer.title }}</h2>
+            <p class="text-[14px] text-clay leading-relaxed flex-1">{{ offer.description }}</p>
+            <div class="mt-7 flex items-center justify-between border-t pt-5" style="border-color: rgba(184,149,106,0.2);">
+              <span class="font-display text-3xl italic font-medium text-cream">{{ offer.discount_percent }}% off</span>
+              <span class="text-[11px] font-medium uppercase tracking-wider text-bark">{{ offer.duration_label }}</span>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="hairline p-12 text-center max-w-xl mx-auto" style="border-color: rgba(184,149,106,0.2); background: rgba(193,104,76,0.04);">
+        <i class="fa fa-tag text-terracotta text-3xl"></i>
+        <h2 class="font-display text-2xl italic font-medium mt-4">No active offers right now</h2>
+        <p class="text-clay mt-2 text-[14px]">Check back soon — new deals are added regularly.</p>
+        <a href="{% url 'home' %}" class="btn-primary inline-block mt-6 px-7 py-3 text-[13px] font-medium uppercase tracking-wider">
+          Back to homepage
+        </a>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock content %}

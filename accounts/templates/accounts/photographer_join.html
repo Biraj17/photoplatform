@@ -121,7 +121,7 @@
   <div class="hidden lg:flex flex-col justify-between bg-espresso text-cream p-12 relative overflow-hidden">
     <div class="absolute inset-0 opacity-[0.08]" style="background-image: radial-gradient(circle at 25% 25%, #C1684C 0, transparent 45%), radial-gradient(circle at 80% 80%, #9DAF8E 0, transparent 40%);"></div>
 
-    <a href="photoplat.html" class="relative flex items-center gap-2.5">
+    <a href="{% url 'home' %}" class="relative flex items-center gap-2.5">
       <span class="w-9 h-9 flex items-center justify-center bg-cream text-espresso rounded">
         <i class="fa fa-camera text-sm"></i>
       </span>
@@ -160,7 +160,7 @@
   <div class="flex items-center justify-center p-6 sm:p-12">
     <div class="w-full max-w-md">
 
-      <a href="photoplat.html" class="lg:hidden flex items-center gap-2.5 mb-10">
+      <a href="{% url 'home' %}" class="lg:hidden flex items-center gap-2.5 mb-10">
         <span class="w-9 h-9 flex items-center justify-center bg-espresso text-cream rounded">
           <i class="fa fa-camera text-sm"></i>
         </span>
@@ -172,57 +172,82 @@
       <p class="text-bark mt-2 text-[14px]">Already have an account? <a href="#" class="text-terracotta font-medium hover:underline">Log in</a></p>
 
       <!-- Success state -->
-      <div id="successPanel" class="hidden hairline bg-parchment p-8 mt-8 text-center">
+      <div id="successPanel" class="{% if not success %}hidden {% endif %}hairline bg-parchment p-8 mt-8 text-center">
         <i class="fa fa-check-circle text-terracotta text-3xl"></i>
         <h3 class="font-display text-2xl italic font-medium mt-4">Welcome to PhotoPlat</h3>
         <p class="text-bark text-[14px] mt-2">Your account has been created. You can now complete your photographer profile.</p>
-        <a href="photoplat.html" class="btn-primary inline-block mt-6 px-7 py-3 text-[13px] font-medium uppercase tracking-wider">Go to homepage</a>
+        <a href="{% url 'home' %}" class="btn-primary inline-block mt-6 px-7 py-3 text-[13px] font-medium uppercase tracking-wider">Go to homepage</a>
       </div>
 
-      <form id="signupForm" class="mt-8 space-y-5" novalidate>
+      <form id="signupForm" method="post" class="mt-8 space-y-5 {% if success %}hidden{% endif %}">
+        {% csrf_token %}
 
         <div>
-          <label class="field-label" for="fullName">Full Name</label>
-          <input class="field-input" type="text" id="fullName" name="fullName" placeholder="e.g. Sarita Gurung" autocomplete="name">
-          <p class="error-msg" id="err-fullName"></p>
+          <label class="field-label" for="id_full_name">Full Name</label>
+          {{ form.full_name }}
+          {% if form.full_name.errors %}
+            <p class="error-msg">{{ form.full_name.errors.0 }}</p>
+          {% else %}
+            <p class="error-msg" id="err-fullName"></p>
+          {% endif %}
         </div>
 
         <div>
-          <label class="field-label" for="email">Email Address</label>
-          <input class="field-input" type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email">
-          <p class="error-msg" id="err-email"></p>
+          <label class="field-label" for="id_email">Email Address</label>
+          {{ form.email }}
+          {% if form.email.errors %}
+            <p class="error-msg">{{ form.email.errors.0 }}</p>
+          {% else %}
+            <p class="error-msg" id="err-email"></p>
+          {% endif %}
         </div>
 
         <div>
-          <label class="field-label" for="password">Password</label>
+          <label class="field-label" for="id_password">Password</label>
           <div class="relative">
-            <input class="field-input pr-11" type="password" id="password" name="password" placeholder="At least 8 characters" autocomplete="new-password">
-            <button type="button" class="absolute right-0 top-0 h-full w-11 flex items-center justify-center text-bark hover:text-terracotta" onclick="togglePassword('password', this)" aria-label="Show password">
+            {{ form.password }}
+            <button type="button" class="absolute right-0 top-0 h-full w-11 flex items-center justify-center text-bark hover:text-terracotta" onclick="togglePassword('id_password', this)" aria-label="Show password">
               <i class="fa fa-eye"></i>
             </button>
           </div>
           <div class="flex gap-1.5 mt-2.5" id="strengthBars">
             <span class="strength-bar"></span><span class="strength-bar"></span><span class="strength-bar"></span>
           </div>
-          <p class="error-msg" id="err-password"></p>
+          {% if form.password.errors %}
+            <p class="error-msg">{{ form.password.errors.0 }}</p>
+          {% else %}
+            <p class="error-msg" id="err-password"></p>
+          {% endif %}
         </div>
 
         <div>
-          <label class="field-label" for="confirmPassword">Confirm Password</label>
+          <label class="field-label" for="id_confirm_password">Confirm Password</label>
           <div class="relative">
-            <input class="field-input pr-11" type="password" id="confirmPassword" name="confirmPassword" placeholder="Re-enter your password" autocomplete="new-password">
-            <button type="button" class="absolute right-0 top-0 h-full w-11 flex items-center justify-center text-bark hover:text-terracotta" onclick="togglePassword('confirmPassword', this)" aria-label="Show password">
+            {{ form.confirm_password }}
+            <button type="button" class="absolute right-0 top-0 h-full w-11 flex items-center justify-center text-bark hover:text-terracotta" onclick="togglePassword('id_confirm_password', this)" aria-label="Show password">
               <i class="fa fa-eye"></i>
             </button>
           </div>
-          <p class="error-msg" id="err-confirmPassword"></p>
+          {% if form.confirm_password.errors %}
+            <p class="error-msg">{{ form.confirm_password.errors.0 }}</p>
+          {% else %}
+            <p class="error-msg" id="err-confirmPassword"></p>
+          {% endif %}
         </div>
 
         <label class="flex items-start gap-3 text-[13px] text-bark pt-1">
-          <input type="checkbox" id="terms" class="mt-0.5 accent-[#C1684C]">
+          {{ form.terms }}
           <span>I agree to PhotoPlat's <a href="#" class="text-terracotta hover:underline">Terms of Service</a> and <a href="#" class="text-terracotta hover:underline">Privacy Policy</a>.</span>
         </label>
-        <p class="error-msg" id="err-terms"></p>
+        {% if form.terms.errors %}
+          <p class="error-msg">{{ form.terms.errors.0 }}</p>
+        {% else %}
+          <p class="error-msg" id="err-terms"></p>
+        {% endif %}
+
+        {% if form.non_field_errors %}
+          <p class="error-msg">{{ form.non_field_errors.0 }}</p>
+        {% endif %}
 
         <button type="submit" class="btn-primary w-full py-3.5 text-[13px] font-medium uppercase tracking-wider mt-2">
           Create account
@@ -262,73 +287,25 @@
     }
   }
 
-  const passwordInput = document.getElementById('password');
+  const passwordInput = document.getElementById('id_password');
   const bars = document.querySelectorAll('.strength-bar');
 
-  passwordInput.addEventListener('input', () => {
-    const val = passwordInput.value;
-    let score = 0;
-    if (val.length >= 8) score++;
-    if (/[A-Z]/.test(val) && /[0-9]/.test(val)) score++;
-    if (/[^A-Za-z0-9]/.test(val) && val.length >= 10) score++;
+  if (passwordInput) {
+    passwordInput.addEventListener('input', () => {
+      const val = passwordInput.value;
+      let score = 0;
+      if (val.length >= 8) score++;
+      if (/[A-Z]/.test(val) && /[0-9]/.test(val)) score++;
+      if (/[^A-Za-z0-9]/.test(val) && val.length >= 10) score++;
 
-    bars.forEach((b, i) => {
-      b.className = 'strength-bar';
-      if (i < score) {
-        b.classList.add(score === 1 ? 'active-weak' : score === 2 ? 'active-mid' : 'active-strong');
-      }
+      bars.forEach((b, i) => {
+        b.className = 'strength-bar';
+        if (i < score) {
+          b.classList.add(score === 1 ? 'active-weak' : score === 2 ? 'active-mid' : 'active-strong');
+        }
+      });
     });
-  });
-
-  function setError(fieldId, message) {
-    document.getElementById('err-' + fieldId).textContent = message;
-    const input = document.getElementById(fieldId);
-    if (input) input.classList.toggle('field-error', !!message);
   }
-
-  document.getElementById('signupForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    const fullName = document.getElementById('fullName').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
-    const terms = document.getElementById('terms').checked;
-
-    let valid = true;
-
-    if (fullName.length < 2) {
-      setError('fullName', 'Please enter your full name.');
-      valid = false;
-    } else setError('fullName', '');
-
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(email)) {
-      setError('email', 'Please enter a valid email address.');
-      valid = false;
-    } else setError('email', '');
-
-    if (password.length < 8) {
-      setError('password', 'Password must be at least 8 characters.');
-      valid = false;
-    } else setError('password', '');
-
-    if (confirmPassword !== password || confirmPassword === '') {
-      setError('confirmPassword', 'Passwords do not match.');
-      valid = false;
-    } else setError('confirmPassword', '');
-
-    if (!terms) {
-      setError('terms', 'Please accept the Terms of Service to continue.');
-      valid = false;
-    } else setError('terms', '');
-
-    if (!valid) return;
-
-    // Demo behavior: no backend wired up yet — show success panel.
-    document.getElementById('signupForm').classList.add('hidden');
-    document.getElementById('successPanel').classList.remove('hidden');
-  });
 </script>
 
 </body>

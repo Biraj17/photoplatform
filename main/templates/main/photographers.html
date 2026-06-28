@@ -1,0 +1,69 @@
+{% extends "main/base.html" %}
+
+{% block title %}Photographers — PhotoPlat{% endblock %}
+
+{% block content %}
+<div class="h-20"></div>
+
+<section class="py-24 bg-cream">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+
+    <div class="mb-12">
+      <span class="section-tag">Registered on PhotoPlat</span>
+      <h1 class="font-display text-4xl lg:text-5xl italic font-medium mt-4">Our photographers</h1>
+      <p class="text-bark mt-3 max-w-2xl leading-relaxed">
+        Browse photographers who have joined PhotoPlat. Every profile below is a real account registered on the platform.
+      </p>
+    </div>
+
+    {% if photographers %}
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {% for photographer in photographers %}
+          <article class="card-lift bg-parchment hairline overflow-hidden">
+            <div class="relative h-52 {% cycle 'bg-gradient-to-br from-[#B8956A] to-[#7A5C3E]' 'bg-gradient-to-br from-[#C1684C] to-[#A85339]' 'bg-gradient-to-br from-[#9DAF8E] to-[#6B7A5E]' 'bg-gradient-to-br from-[#7A5C3E] to-[#3B2B1F]' %}">
+              <div class="absolute inset-0 flex items-center justify-center">
+                <i class="fa fa-camera-retro text-cream/25 text-5xl"></i>
+              </div>
+              <span class="absolute top-4 left-4 bg-cream text-[10px] font-medium uppercase tracking-wider px-3 py-1.5 text-espresso">
+                {{ photographer.specialty }}
+              </span>
+            </div>
+            <div class="p-6">
+              <div class="flex items-center justify-between gap-3">
+                <h2 class="font-display text-xl italic font-medium">{{ photographer.full_name }}</h2>
+                <span class="flex items-center gap-1 text-sm font-medium shrink-0">
+                  <i class="fa fa-star text-terracotta"></i> {{ photographer.rating }}
+                </span>
+              </div>
+              <p class="text-[13px] text-bark mt-1.5 uppercase tracking-wide">
+                {{ photographer.city }} · {{ photographer.years_experience }} yr{{ photographer.years_experience|pluralize }}
+              </p>
+              <p class="text-[13px] text-clay mt-2">{{ photographer.user.email }}</p>
+              <div class="flex items-center justify-between mt-5 pt-5 border-t" style="border-color: rgba(184,149,106,0.2);">
+                {% if photographer.price_per_shoot %}
+                  <span class="font-display text-lg italic font-medium">
+                    Rs {{ photographer.price_per_shoot|floatformat:0 }}<span class="text-[12px] text-bark font-sans not-italic font-normal"> /shoot</span>
+                  </span>
+                {% else %}
+                  <span class="text-[12px] text-bark uppercase tracking-wider">Price on request</span>
+                {% endif %}
+                <a href="{% url 'photographer_profile' %}" class="text-terracotta text-[12px] font-medium uppercase tracking-wider hover:underline">View profile</a>
+              </div>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="hairline bg-parchment p-12 text-center max-w-xl mx-auto">
+        <i class="fa fa-camera text-terracotta text-3xl"></i>
+        <h2 class="font-display text-2xl italic font-medium mt-4">No photographers yet</h2>
+        <p class="text-bark mt-2 text-[14px]">Be the first to join PhotoPlat and list your work.</p>
+        <a href="{% url 'photographer_join_page' %}" class="btn-primary inline-block mt-6 px-7 py-3 text-[13px] font-medium uppercase tracking-wider">
+          Join PhotoPlat
+        </a>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock content %}
