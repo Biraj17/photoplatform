@@ -140,6 +140,32 @@
     object-fit: contain;
     border-radius: 2px;
   }
+
+  .field-input {
+    width: 100%;
+    background: #F5F0E8;
+    border: 1px solid rgba(184,149,106,0.3);
+    border-radius: 2px;
+    padding: 0.85rem 1rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    color: #3B2B1F;
+  }
+  .field-input:focus {
+    outline: none;
+    border-color: #C1684C;
+    box-shadow: 0 0 0 3px rgba(193,104,76,0.12);
+  }
+  .field-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #7A5C3E;
+    display: block;
+    margin-bottom: 0.6rem;
+  }
+  .error-msg { font-size: 12px; color: #C1684C; margin-top: 0.4rem; }
 </style>
 </head>
 
@@ -171,7 +197,12 @@
     </div>
 
     <div class="hidden lg:flex items-center gap-5">
-      <a href="#" class="text-[13px] font-medium uppercase tracking-wider text-bark hover:text-terracotta">Log in</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'photographer_dashboard' %}" class="text-[13px] font-medium uppercase tracking-wider text-bark hover:text-terracotta">Dashboard</a>
+        <a href="{% url 'photographer_logout' %}" class="text-[13px] font-medium uppercase tracking-wider text-bark hover:text-terracotta">Log out</a>
+      {% else %}
+        <a href="{% url 'photographer_login' %}" class="text-[13px] font-medium uppercase tracking-wider text-bark hover:text-terracotta">Log in</a>
+      {% endif %}
       <a href="{% url 'photographer_join_page' %}" class="btn-primary px-6 py-3 text-[13px] font-medium uppercase tracking-wider">
         List your work
       </a>
@@ -188,7 +219,12 @@
     <a href="{% url 'home' %}#how-it-works" class="block text-sm uppercase tracking-wider font-medium">How it works</a>
     <a href="{% url 'photographer_join_page' %}" class="block text-sm uppercase tracking-wider font-medium">For Photographers</a>
     <div class="pt-3 flex flex-col gap-3">
-      <a href="#" class="text-center py-3 hairline text-sm font-medium uppercase tracking-wider">Log in</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'photographer_dashboard' %}" class="text-center py-3 hairline text-sm font-medium uppercase tracking-wider">Dashboard</a>
+        <a href="{% url 'photographer_logout' %}" class="text-center py-3 hairline text-sm font-medium uppercase tracking-wider">Log out</a>
+      {% else %}
+        <a href="{% url 'photographer_login' %}" class="text-center py-3 hairline text-sm font-medium uppercase tracking-wider">Log in</a>
+      {% endif %}
       <a href="{% url 'photographer_join_page' %}" class="btn-primary text-center py-3 text-sm font-medium uppercase tracking-wider">List your work</a>
     </div>
   </div>
@@ -210,9 +246,9 @@
         </div>
         <p class="text-[14px] mt-5 max-w-xs leading-relaxed">A curated marketplace for finding and booking trusted photographers across Nepal — weddings, portraits, families, fashion, and travel.</p>
         <div class="flex gap-3 mt-6">
-          <a href="#" class="w-9 h-9 border flex items-center justify-center hover:border-terracotta hover:text-terracotta" style="border-color: rgba(184,149,106,0.25);" aria-label="Instagram"><i class="fa fa-instagram"></i></a>
-          <a href="#" class="w-9 h-9 border flex items-center justify-center hover:border-terracotta hover:text-terracotta" style="border-color: rgba(184,149,106,0.25);" aria-label="Facebook"><i class="fa fa-facebook"></i></a>
-          <a href="#" class="w-9 h-9 border flex items-center justify-center hover:border-terracotta hover:text-terracotta" style="border-color: rgba(184,149,106,0.25);" aria-label="Twitter"><i class="fa fa-twitter"></i></a>
+          <a href="https://www.instagram.com/birrajj_/" target="_blank" rel="noopener noreferrer" class="w-9 h-9 border flex items-center justify-center hover:border-terracotta hover:text-terracotta" style="border-color: rgba(184,149,106,0.25);" aria-label="Instagram"><i class="fa fa-instagram"></i></a>
+          <a href="https://www.facebook.com/biraj.kandel.5" target="_blank" rel="noopener noreferrer" class="w-9 h-9 border flex items-center justify-center hover:border-terracotta hover:text-terracotta" style="border-color: rgba(184,149,106,0.25);" aria-label="Facebook"><i class="fa fa-facebook"></i></a>
+          <a href="https://x.com/Biraj1777" target="_blank" rel="noopener noreferrer" class="w-9 h-9 border flex items-center justify-center hover:border-terracotta hover:text-terracotta" style="border-color: rgba(184,149,106,0.25);" aria-label="X"><i class="fa fa-twitter"></i></a>
         </div>
       </div>
 

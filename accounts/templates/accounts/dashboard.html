@@ -1,0 +1,141 @@
+{% extends "main/base.html" %}
+
+{% block title %}Photographer Dashboard — PhotoPlat{% endblock %}
+
+{% block content %}
+<div class="h-20"></div>
+
+<section class="py-16 bg-cream">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+      <div>
+        <span class="section-tag">Photographer Dashboard</span>
+        <h1 class="font-display text-4xl lg:text-5xl italic font-medium mt-4">{{ photographer.full_name }}</h1>
+        <p class="text-bark mt-3 max-w-2xl leading-relaxed">
+          Update your public details, add portfolio photos, and list projects you have completed.
+        </p>
+      </div>
+      <a href="{% url 'photographer_profile_detail' photographer.pk %}" class="btn-secondary px-6 py-3 text-[13px] font-medium uppercase tracking-wider text-center">
+        View public profile
+      </a>
+    </div>
+
+    {% if messages %}
+      <div class="mt-8 space-y-3">
+        {% for message in messages %}
+          <div class="hairline bg-parchment p-4 text-[14px] text-bark">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-10">
+      <form method="post" enctype="multipart/form-data" class="lg:col-span-2 hairline bg-parchment p-7 space-y-5">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="save_profile">
+        <h2 class="font-display text-2xl italic font-medium">Profile and contact</h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          {% for field in profile_form %}
+            <div class="{% if field.name == 'bio' or field.name == 'profile_image' or field.name == 'address' %}sm:col-span-2{% endif %}">
+              <label class="field-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+              {% if field.errors %}
+                <p class="error-msg">{{ field.errors.0 }}</p>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+
+        <button type="submit" class="btn-primary px-7 py-3 text-[13px] font-medium uppercase tracking-wider">
+          Save profile
+        </button>
+      </form>
+
+      <div class="space-y-8">
+        <form method="post" enctype="multipart/form-data" class="hairline bg-parchment p-7 space-y-5">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="add_image">
+          <h2 class="font-display text-2xl italic font-medium">Add image</h2>
+          {% for field in image_form %}
+            <div>
+              <label class="field-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+              {% if field.errors %}
+                <p class="error-msg">{{ field.errors.0 }}</p>
+              {% endif %}
+            </div>
+          {% endfor %}
+          <button type="submit" class="btn-primary w-full py-3 text-[13px] font-medium uppercase tracking-wider">
+            Upload image
+          </button>
+        </form>
+
+        <form method="post" enctype="multipart/form-data" class="hairline bg-parchment p-7 space-y-5">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="add_project">
+          <h2 class="font-display text-2xl italic font-medium">Add project</h2>
+          {% for field in project_form %}
+            <div>
+              <label class="field-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+              {% if field.errors %}
+                <p class="error-msg">{{ field.errors.0 }}</p>
+              {% endif %}
+            </div>
+          {% endfor %}
+          <button type="submit" class="btn-primary w-full py-3 text-[13px] font-medium uppercase tracking-wider">
+            Save project
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
+      <div>
+        <span class="section-tag">Portfolio</span>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-5">
+          {% for item in portfolio_images %}
+            <figure class="hairline bg-parchment overflow-hidden">
+              <img src="{{ item.image.url }}" alt="{{ item.caption|default:'Portfolio image' }}" class="w-full h-40 object-cover">
+              {% if item.caption %}
+                <figcaption class="p-3 text-[13px] text-bark">{{ item.caption }}</figcaption>
+              {% endif %}
+            </figure>
+          {% empty %}
+            <p class="text-bark text-[14px] mt-4">No portfolio images yet.</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div>
+        <span class="section-tag">Projects</span>
+        <div class="space-y-4 mt-5">
+          {% for project in projects %}
+            <article class="hairline bg-parchment p-5 flex gap-4">
+              {% if project.cover_image %}
+                <img src="{{ project.cover_image.url }}" alt="{{ project.title }}" class="w-24 h-24 object-cover shrink-0">
+              {% else %}
+                <div class="w-24 h-24 bg-sand flex items-center justify-center shrink-0">
+                  <i class="fa fa-camera text-bark"></i>
+                </div>
+              {% endif %}
+              <div>
+                <h3 class="font-display text-xl italic font-medium">{{ project.title }}</h3>
+                <p class="text-[13px] text-bark mt-1">
+                  {% if project.location %}{{ project.location }}{% endif %}
+                  {% if project.completed_at %}{% if project.location %} · {% endif %}{{ project.completed_at }}{% endif %}
+                </p>
+                {% if project.description %}
+                  <p class="text-[14px] text-bark leading-relaxed mt-2">{{ project.description }}</p>
+                {% endif %}
+              </div>
+            </article>
+          {% empty %}
+            <p class="text-bark text-[14px] mt-4">No projects added yet.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}

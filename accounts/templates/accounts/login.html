@@ -1,0 +1,69 @@
+{% extends "main/base.html" %}
+
+{% block title %}Photographer Login — PhotoPlat{% endblock %}
+
+{% block content %}
+<div class="h-20"></div>
+
+<section class="min-h-[calc(100vh-5rem)] py-20 bg-cream">
+  <div class="max-w-md mx-auto px-6">
+    <span class="section-tag">Photographer Login</span>
+    <h1 class="font-display text-4xl italic font-medium mt-4">Welcome back</h1>
+    <p class="text-bark mt-2 text-[14px]">Log in to update your profile, upload images, and add completed projects.</p>
+
+    <form method="post" class="hairline bg-parchment p-7 mt-8 space-y-5">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="bg-cream hairline p-4 text-[13px] text-terracotta">
+          {{ form.non_field_errors.0 }}
+        </div>
+      {% endif %}
+
+      <div>
+        <label class="field-label" for="id_username">Email Address</label>
+        {{ form.username }}
+        {% if form.username.errors %}
+          <p class="error-msg">{{ form.username.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <div>
+        <label class="field-label" for="id_password">Password</label>
+        <div class="relative">
+          {{ form.password }}
+          <button type="button" class="absolute right-0 top-0 h-full w-11 flex items-center justify-center text-bark hover:text-terracotta" onclick="togglePassword('id_password', this)" aria-label="Show password">
+            <i class="fa fa-eye"></i>
+          </button>
+        </div>
+        {% if form.password.errors %}
+          <p class="error-msg">{{ form.password.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="btn-primary w-full py-3.5 text-[13px] font-medium uppercase tracking-wider">
+        Log in
+      </button>
+    </form>
+
+    <p class="text-bark mt-5 text-[14px] text-center">
+      New photographer?
+      <a href="{% url 'photographer_join_page' %}" class="text-terracotta font-medium hover:underline">Create your account</a>
+    </p>
+  </div>
+</section>
+
+<script>
+  function togglePassword(id, btn) {
+    const input = document.getElementById(id);
+    const icon = btn.querySelector('i');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.className = 'fa fa-eye-slash';
+    } else {
+      input.type = 'password';
+      icon.className = 'fa fa-eye';
+    }
+  }
+</script>
+{% endblock content %}

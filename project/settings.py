@@ -118,3 +118,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'main' / 'static']
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+LOGIN_URL = 'photographer_login'
+LOGIN_REDIRECT_URL = 'photographer_dashboard'

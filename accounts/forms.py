@@ -1,7 +1,11 @@
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 
-from .models import Photographer
+from .models import Photographer, PhotographerProject, PortfolioImage
+
+
+FIELD_CLASS = "field-input"
 
 
 class PhotographerJoinForm(forms.Form):
@@ -66,5 +70,79 @@ class PhotographerJoinForm(forms.Form):
         photographer = Photographer.objects.create(
             user=user,
             full_name=self.cleaned_data["full_name"].strip(),
+            contact_email=email,
         )
         return photographer
+
+
+class PhotographerLoginForm(AuthenticationForm):
+    username = forms.EmailField(
+        label="Email Address",
+        widget=forms.EmailInput(attrs={
+            "class": FIELD_CLASS,
+            "placeholder": "you@example.com",
+            "autocomplete": "email",
+        }),
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            "class": f"{FIELD_CLASS} pr-11",
+            "placeholder": "Your password",
+            "autocomplete": "current-password",
+        }),
+    )
+
+
+class PhotographerProfileForm(forms.ModelForm):
+    class Meta:
+        model = Photographer
+        fields = [
+            "full_name",
+            "city",
+            "address",
+            "phone",
+            "contact_email",
+            "specialty",
+            "years_experience",
+            "price_per_shoot",
+            "bio",
+            "profile_image",
+        ]
+        widgets = {
+            "full_name": forms.TextInput(attrs={"class": FIELD_CLASS}),
+            "city": forms.TextInput(attrs={"class": FIELD_CLASS}),
+            "address": forms.TextInput(attrs={"class": FIELD_CLASS}),
+            "phone": forms.TextInput(attrs={"class": FIELD_CLASS}),
+            "contact_email": forms.EmailInput(attrs={"class": FIELD_CLASS}),
+            "specialty": forms.Select(attrs={"class": FIELD_CLASS}),
+            "years_experience": forms.NumberInput(attrs={"class": FIELD_CLASS, "min": 0}),
+            "price_per_shoot": forms.NumberInput(attrs={"class": FIELD_CLASS, "min": 0}),
+            "bio": forms.Textarea(attrs={"class": FIELD_CLASS, "rows": 5}),
+            "profile_image": forms.FileInput(attrs={"class": FIELD_CLASS, "accept": "image/*"}),
+        }
+
+
+class PortfolioImageForm(forms.ModelForm):
+    class Meta:
+        model = PortfolioImage
+        fields = ["image", "caption"]
+        widgets = {
+            "image": forms.FileInput(attrs={"class": FIELD_CLASS, "accept": "image/*"}),
+            "caption": forms.TextInput(attrs={
+                "class": FIELD_CLASS,
+                "placeholder": "Short caption",
+            }),
+        }
+
+
+class PhotographerProjectForm(forms.ModelForm):
+    class Meta:
+        model = PhotographerProject
+        fields = ["title", "location", "completed_at", "description", "cover_image"]
+        widgets = {
+            "title": forms.TextInput(attrs={"class": FIELD_CLASS, "placeholder": "Project name"}),
+            "location": forms.TextInput(attrs={"class": FIELD_CLASS, "placeholder": "Kathmandu, Nepal"}),
+            "completed_at": forms.DateInput(attrs={"class": FIELD_CLASS, "type": "date"}),
+            "description": forms.Textarea(attrs={"class": FIELD_CLASS, "rows": 4}),
+            "cover_image": forms.FileInput(attrs={"class": FIELD_CLASS, "accept": "image/*"}),
+        }

@@ -169,14 +169,14 @@
 
       <span class="section-tag">Create Account</span>
       <h2 class="font-display text-4xl italic font-medium mt-4">Join PhotoPlat</h2>
-      <p class="text-bark mt-2 text-[14px]">Already have an account? <a href="#" class="text-terracotta font-medium hover:underline">Log in</a></p>
+      <p class="text-bark mt-2 text-[14px]">Already have an account? <a href="{% url 'photographer_login' %}" class="text-terracotta font-medium hover:underline">Log in</a></p>
 
       <!-- Success state -->
       <div id="successPanel" class="{% if not success %}hidden {% endif %}hairline bg-parchment p-8 mt-8 text-center">
         <i class="fa fa-check-circle text-terracotta text-3xl"></i>
         <h3 class="font-display text-2xl italic font-medium mt-4">Welcome to PhotoPlat</h3>
         <p class="text-bark text-[14px] mt-2">Your account has been created. You can now complete your photographer profile.</p>
-        <a href="{% url 'home' %}" class="btn-primary inline-block mt-6 px-7 py-3 text-[13px] font-medium uppercase tracking-wider">Go to homepage</a>
+        <a href="{% url 'photographer_dashboard' %}" class="btn-primary inline-block mt-6 px-7 py-3 text-[13px] font-medium uppercase tracking-wider">Open dashboard</a>
       </div>
 
       <form id="signupForm" method="post" class="mt-8 space-y-5 {% if success %}hidden{% endif %}">
