@@ -55,7 +55,7 @@ class BookingRequest(models.Model):
     )
     client_name = models.CharField(max_length=120)
     client_email = models.EmailField()
-    client_phone = models.CharField(max_length=30, blank=True)
+    client_phone = models.CharField(max_length=30)
     shoot_date = models.DateField(blank=True, null=True)
     package = models.CharField(max_length=20, choices=PACKAGE_CHOICES, default="Custom")
     message = models.TextField(blank=True)

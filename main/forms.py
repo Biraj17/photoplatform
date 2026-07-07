@@ -37,11 +37,17 @@ class PhotographerSearchForm(forms.Form):
 class BookingRequestForm(forms.ModelForm):
     class Meta:
         model = BookingRequest
-        fields = ["client_name", "client_email", "client_phone", "shoot_date", "package", "message"]
+        fields = ["client_phone", "client_name", "client_email", "shoot_date", "package", "message"]
+        labels = {
+            "client_phone": "Phone Number",
+            "client_name": "Full Name",
+            "client_email": "Email Address",
+            "shoot_date": "Preferred Date",
+        }
         widgets = {
+            "client_phone": forms.TextInput(attrs={"class": FIELD_CLASS, "placeholder": "+977 ...", "required": True}),
             "client_name": forms.TextInput(attrs={"class": FIELD_CLASS, "placeholder": "Your name"}),
             "client_email": forms.EmailInput(attrs={"class": FIELD_CLASS, "placeholder": "you@example.com"}),
-            "client_phone": forms.TextInput(attrs={"class": FIELD_CLASS, "placeholder": "+977 ..."}),
             "shoot_date": forms.DateInput(attrs={"class": FIELD_CLASS, "type": "date"}),
             "package": forms.Select(attrs={"class": FIELD_CLASS}),
             "message": forms.Textarea(attrs={"class": FIELD_CLASS, "rows": 4, "placeholder": "Tell the photographer about the shoot"}),
