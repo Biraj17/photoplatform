@@ -37,7 +37,7 @@
         </div>
         <div class="flex flex-wrap items-center gap-x-6 gap-y-1.5 mt-3 text-bark text-[14px]">
           <span><i class="fa fa-map-marker text-terracotta mr-1.5"></i>{{ photographer.city }}</span>
-          <span><i class="fa fa-star text-terracotta mr-1.5"></i>{{ photographer.rating }}</span>
+          <span class="flex items-center gap-1.5">{% include "main/includes/star_rating.html" with rating=photographer.rating %} {{ photographer.rating }}</span>
           <span><i class="fa fa-clock-o text-terracotta mr-1.5"></i>{{ photographer.years_experience }} year{{ photographer.years_experience|pluralize }} experience</span>
         </div>
       </div>
@@ -121,6 +121,28 @@
           {% endfor %}
         </div>
       </div>
+
+      {% if photographer_offers %}
+        <div>
+          <span class="section-tag">Limited-Time</span>
+          <h2 class="font-display text-3xl italic font-medium mt-4 mb-6">Offers from {{ photographer.full_name }}</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {% for offer in photographer_offers %}
+              <article class="hairline bg-parchment p-6">
+                <i class="fa {{ offer.icon }} text-xl text-terracotta mb-4"></i>
+                <h3 class="font-display text-xl italic font-medium">{{ offer.title }}</h3>
+                {% if offer.description %}
+                  <p class="text-[14px] text-bark leading-relaxed mt-2">{{ offer.description }}</p>
+                {% endif %}
+                <div class="flex items-center justify-between mt-5 pt-4 border-t" style="border-color: rgba(184,149,106,0.2);">
+                  <span class="font-display text-2xl italic font-medium">{{ offer.discount_percent }}% off</span>
+                  <span class="text-[11px] uppercase tracking-wider text-bark">{{ offer.duration_label }}</span>
+                </div>
+              </article>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
     </div>
 
     <aside class="lg:col-span-1">

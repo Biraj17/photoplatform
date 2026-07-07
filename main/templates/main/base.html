@@ -192,7 +192,6 @@
     <div class="hidden lg:flex items-center gap-10 text-[13px] font-medium uppercase tracking-wider text-bark">
       <a href="{% url 'photographers_list' %}" class="hover:text-terracotta">Photographers</a>
       <a href="{% url 'offers_list' %}" class="hover:text-terracotta">Offers</a>
-      <a href="{% url 'home' %}#how-it-works" class="hover:text-terracotta">How it works</a>
       <a href="{% url 'photographer_join_page' %}" class="hover:text-terracotta">For Photographers</a>
     </div>
 
@@ -216,7 +215,6 @@
   <div id="mobileMenu" class="hidden lg:hidden border-t px-6 py-6 space-y-5 navbar-glass" style="border-color: rgba(184,149,106,0.2);">
     <a href="{% url 'photographers_list' %}" class="block text-sm uppercase tracking-wider font-medium">Photographers</a>
     <a href="{% url 'offers_list' %}" class="block text-sm uppercase tracking-wider font-medium">Offers</a>
-    <a href="{% url 'home' %}#how-it-works" class="block text-sm uppercase tracking-wider font-medium">How it works</a>
     <a href="{% url 'photographer_join_page' %}" class="block text-sm uppercase tracking-wider font-medium">For Photographers</a>
     <div class="pt-3 flex flex-col gap-3">
       {% if user.is_authenticated %}

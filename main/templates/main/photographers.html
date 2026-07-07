@@ -55,13 +55,6 @@
               <span class="absolute top-4 left-4 bg-cream text-[10px] font-medium uppercase tracking-wider px-3 py-1.5 text-espresso">
                 {{ photographer.specialty }}
               </span>
-              <form method="post" action="{% url 'toggle_saved_photographer' photographer.pk %}">
-                {% csrf_token %}
-                <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                <button type="submit" class="absolute top-4 right-4 w-8 h-8 bg-cream/90 flex items-center justify-center text-espresso hover:text-terracotta" aria-label="Save photographer">
-                  <i class="fa fa-heart-o"></i>
-                </button>
-              </form>
             </div>
             <div class="p-6">
               <div class="flex items-center justify-between gap-3">
@@ -71,9 +64,7 @@
                     <i class="fa fa-check-circle text-moss text-sm" title="Identity verified"></i>
                   {% endif %}
                 </h2>
-                <span class="flex items-center gap-1 text-sm font-medium shrink-0">
-                  <i class="fa fa-star text-terracotta"></i> {{ photographer.rating }}
-                </span>
+                {% include "main/includes/star_rating.html" with rating=photographer.rating %}
               </div>
               <p class="text-[13px] text-bark mt-1.5 uppercase tracking-wide">
                 {{ photographer.city }} · {{ photographer.years_experience }} yr{{ photographer.years_experience|pluralize }}

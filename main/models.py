@@ -5,6 +5,14 @@ from accounts.models import Photographer
 
 
 class Offer(models.Model):
+    photographer = models.ForeignKey(
+        Photographer,
+        on_delete=models.CASCADE,
+        related_name="offers",
+        blank=True,
+        null=True,
+        help_text="Leave blank for a site-wide offer",
+    )
     title = models.CharField(max_length=120)
     discount_percent = models.PositiveSmallIntegerField(help_text="Discount percentage, e.g. 20 for 20% off")
     description = models.TextField(max_length=300)
@@ -56,9 +64,9 @@ class BookingRequest(models.Model):
     client_name = models.CharField(max_length=120)
     client_email = models.EmailField()
     client_phone = models.CharField(max_length=30)
-    shoot_date = models.DateField(blank=True, null=True)
+    shoot_date = models.DateField()
     package = models.CharField(max_length=20, choices=PACKAGE_CHOICES, default="Custom")
-    message = models.TextField(blank=True)
+    message = models.TextField()
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 

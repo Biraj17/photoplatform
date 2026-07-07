@@ -1,0 +1,7 @@
+{% load rating_extras %}
+{% star_display rating as stars %}
+<span class="inline-flex items-center gap-0.5 text-terracotta" title="{{ rating }} out of 5">
+  {% for _ in stars.full %}<i class="fa fa-star"></i>{% endfor %}
+  {% for _ in stars.half %}<i class="fa fa-star-half-o"></i>{% endfor %}
+  {% for _ in stars.empty %}<i class="fa fa-star-o"></i>{% endfor %}
+</span>

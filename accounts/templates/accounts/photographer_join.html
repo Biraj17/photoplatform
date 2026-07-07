@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,6 +57,13 @@
   }
 
   .hairline { border: 1px solid rgba(184, 149, 106, 0.2); }
+
+  .brand-logo {
+    width: 2.25rem;
+    height: 2.25rem;
+    object-fit: contain;
+    border-radius: 2px;
+  }
 
   a, button, input { transition: all 0.2s ease; }
   a:focus-visible, button:focus-visible, input:focus-visible {
@@ -122,9 +130,7 @@
     <div class="absolute inset-0 opacity-[0.08]" style="background-image: radial-gradient(circle at 25% 25%, #C1684C 0, transparent 45%), radial-gradient(circle at 80% 80%, #9DAF8E 0, transparent 40%);"></div>
 
     <a href="{% url 'home' %}" class="relative flex items-center gap-2.5">
-      <span class="w-9 h-9 flex items-center justify-center bg-cream text-espresso rounded">
-        <i class="fa fa-camera text-sm"></i>
-      </span>
+      <img src="{% static 'main/images/photoplat-logo.png' %}" alt="PhotoPlat logo" class="brand-logo">
       <span class="font-display text-2xl italic font-medium">PhotoPlat</span>
     </a>
 
@@ -161,9 +167,7 @@
     <div class="w-full max-w-md">
 
       <a href="{% url 'home' %}" class="lg:hidden flex items-center gap-2.5 mb-10">
-        <span class="w-9 h-9 flex items-center justify-center bg-espresso text-cream rounded">
-          <i class="fa fa-camera text-sm"></i>
-        </span>
+        <img src="{% static 'main/images/photoplat-logo.png' %}" alt="PhotoPlat logo" class="brand-logo">
         <span class="font-display text-2xl italic font-medium">PhotoPlat</span>
       </a>
 

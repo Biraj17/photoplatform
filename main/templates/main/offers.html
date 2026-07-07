@@ -22,14 +22,23 @@
           <article class="dark-card-glow border p-9 flex flex-col" style="border-color: rgba(184,149,106,0.2); background: rgba(193,104,76,0.04);">
             <i class="fa {{ offer.icon }} text-2xl text-terracotta mb-6"></i>
             <h2 class="font-display text-2xl italic font-medium text-cream mb-3">{{ offer.title }}</h2>
+            {% if offer.photographer %}
+              <p class="text-[11px] uppercase tracking-wider text-clay -mt-2 mb-3">By {{ offer.photographer.full_name }}</p>
+            {% endif %}
             <p class="text-[14px] text-clay leading-relaxed flex-1">{{ offer.description }}</p>
             <div class="mt-7 flex items-center justify-between border-t pt-5" style="border-color: rgba(184,149,106,0.2);">
               <span class="font-display text-3xl italic font-medium text-cream">{{ offer.discount_percent }}% off</span>
               <span class="text-[11px] font-medium uppercase tracking-wider text-bark">{{ offer.duration_label }}</span>
             </div>
-            <a href="{% url 'photographers_list' %}" class="btn-primary text-center mt-7 py-3 text-[12px] font-medium uppercase tracking-wider">
-              Find photographer
-            </a>
+            {% if offer.photographer %}
+              <a href="{% url 'photographer_profile_detail' offer.photographer.pk %}" class="btn-primary text-center mt-7 py-3 text-[12px] font-medium uppercase tracking-wider">
+                View photographer
+              </a>
+            {% else %}
+              <a href="{% url 'photographers_list' %}" class="btn-primary text-center mt-7 py-3 text-[12px] font-medium uppercase tracking-wider">
+                Find photographer
+              </a>
+            {% endif %}
           </article>
         {% endfor %}
       </div>

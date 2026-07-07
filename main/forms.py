@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import BookingRequest
+from .models import BookingRequest, Offer
 
 
 FIELD_CLASS = "field-input"
@@ -51,4 +51,21 @@ class BookingRequestForm(forms.ModelForm):
             "shoot_date": forms.DateInput(attrs={"class": FIELD_CLASS, "type": "date"}),
             "package": forms.Select(attrs={"class": FIELD_CLASS}),
             "message": forms.Textarea(attrs={"class": FIELD_CLASS, "rows": 4, "placeholder": "Tell the photographer about the shoot"}),
+        }
+
+
+class PhotographerOfferForm(forms.ModelForm):
+    class Meta:
+        model = Offer
+        fields = ["title", "discount_percent", "description", "ends_at"]
+        labels = {
+            "title": "Offer Title",
+            "discount_percent": "Discount %",
+            "ends_at": "Valid Until",
+        }
+        widgets = {
+            "title": forms.TextInput(attrs={"class": FIELD_CLASS, "placeholder": "e.g. Off-season wedding discount"}),
+            "discount_percent": forms.NumberInput(attrs={"class": FIELD_CLASS, "min": 1, "max": 100}),
+            "description": forms.Textarea(attrs={"class": FIELD_CLASS, "rows": 3, "placeholder": "What's included in this offer"}),
+            "ends_at": forms.DateInput(attrs={"class": FIELD_CLASS, "type": "date"}),
         }

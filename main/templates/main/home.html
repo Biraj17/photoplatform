@@ -83,12 +83,19 @@
           <article class="dark-card-glow border p-9 flex flex-col" style="border-color: rgba(184,149,106,0.2); background: rgba(193,104,76,0.04);">
             <i class="fa {{ offer.icon }} text-2xl text-terracotta mb-6"></i>
             <h3 class="font-display text-2xl italic font-medium text-cream mb-3">{{ offer.title }}</h3>
+            {% if offer.photographer %}
+              <p class="text-[11px] uppercase tracking-wider text-clay -mt-2 mb-3">By {{ offer.photographer.full_name }}</p>
+            {% endif %}
             <p class="text-[14px] text-clay leading-relaxed flex-1">{{ offer.description }}</p>
             <div class="mt-7 flex items-center justify-between border-t pt-5" style="border-color: rgba(184,149,106,0.2);">
               <span class="font-display text-3xl italic font-medium text-cream">{{ offer.discount_percent }}% off</span>
               <span class="text-[11px] font-medium uppercase tracking-wider text-bark">{{ offer.duration_label }}</span>
             </div>
-            <a href="{% url 'photographers_list' %}" class="mt-6 text-terracotta text-[12px] font-medium uppercase tracking-wider hover:underline">Find photographers</a>
+            {% if offer.photographer %}
+              <a href="{% url 'photographer_profile_detail' offer.photographer.pk %}" class="mt-6 text-terracotta text-[12px] font-medium uppercase tracking-wider hover:underline">View photographer</a>
+            {% else %}
+              <a href="{% url 'photographers_list' %}" class="mt-6 text-terracotta text-[12px] font-medium uppercase tracking-wider hover:underline">Find photographers</a>
+            {% endif %}
           </article>
         {% endfor %}
       </div>
@@ -133,13 +140,6 @@
               </div>
             {% endif %}
             <span class="absolute top-4 left-4 bg-cream text-[10px] font-medium uppercase tracking-wider px-3 py-1.5 text-espresso">{{ photographer.specialty }}</span>
-            <form method="post" action="{% url 'toggle_saved_photographer' photographer.pk %}">
-              {% csrf_token %}
-              <input type="hidden" name="next" value="{{ request.get_full_path }}">
-              <button type="submit" class="absolute top-4 right-4 w-8 h-8 bg-cream/90 flex items-center justify-center text-espresso hover:text-terracotta" aria-label="Save">
-                <i class="fa fa-heart-o"></i>
-              </button>
-            </form>
           </div>
           <div class="p-6">
             <div class="flex items-center justify-between">
@@ -149,9 +149,7 @@
                   <i class="fa fa-check-circle text-moss text-sm" title="Identity verified"></i>
                 {% endif %}
               </h3>
-              <span class="flex items-center gap-1 text-sm font-medium">
-                <i class="fa fa-star text-terracotta"></i> {{ photographer.rating }}
-              </span>
+              {% include "main/includes/star_rating.html" with rating=photographer.rating %}
             </div>
             <p class="text-[13px] text-bark mt-1.5 uppercase tracking-wide">{{ photographer.city }} · {{ photographer.years_experience }} yr{{ photographer.years_experience|pluralize }}</p>
             <div class="flex items-center justify-between mt-5 pt-5 border-t" style="border-color: rgba(184,149,106,0.2);">

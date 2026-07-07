@@ -5,6 +5,8 @@ from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
 
+from main.forms import PhotographerOfferForm
+
 from .forms import (
     PhotographerJoinForm,
     PhotographerKYCForm,
@@ -67,6 +69,7 @@ def photographer_dashboard(request):
     kyc_form = PhotographerKYCForm(instance=photographer)
     image_form = PortfolioImageForm()
     project_form = PhotographerProjectForm()
+    offer_form = PhotographerOfferForm()
 
     if request.method == "POST":
         action = request.POST.get("action")
@@ -102,6 +105,14 @@ def photographer_dashboard(request):
                 project.save()
                 messages.success(request, "Project added.")
                 return redirect("photographer_dashboard")
+        elif action == "add_offer":
+            offer_form = PhotographerOfferForm(request.POST)
+            if offer_form.is_valid():
+                offer = offer_form.save(commit=False)
+                offer.photographer = photographer
+                offer.save()
+                messages.success(request, "Offer added to your public profile.")
+                return redirect("photographer_dashboard")
 
     return render(request, "accounts/dashboard.html", {
         "photographer": photographer,
@@ -109,8 +120,10 @@ def photographer_dashboard(request):
         "kyc_form": kyc_form,
         "image_form": image_form,
         "project_form": project_form,
+        "offer_form": offer_form,
         "portfolio_images": photographer.portfolio_images.all(),
         "projects": photographer.projects.all(),
+        "offers": photographer.offers.all(),
         "booking_requests": photographer.booking_requests.all(),
         "saved_photographers": request.user.saved_photographers.select_related("photographer").all(),
     })

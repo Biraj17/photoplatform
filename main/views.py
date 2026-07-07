@@ -35,6 +35,8 @@ def profile_photographer(request, pk=None):
             Photographer.objects.select_related("user").prefetch_related("portfolio_images", "projects"),
             pk=pk,
         )
+    today = timezone.localdate()
+    photographer_offers = photographer.offers.filter(is_active=True, ends_at__gte=today)
     booking_form = BookingRequestForm(request.POST or None)
     if request.method == "POST" and request.POST.get("action") == "book":
         if booking_form.is_valid():
@@ -52,6 +54,7 @@ def profile_photographer(request, pk=None):
         "photographer": photographer,
         "portfolio_images": photographer.portfolio_images.all(),
         "projects": photographer.projects.all(),
+        "photographer_offers": photographer_offers,
         "booking_form": booking_form,
         "is_saved": is_saved,
     })
