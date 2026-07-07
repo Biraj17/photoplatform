@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
+from django.utils.http import url_has_allowed_host_and_scheme
 
 from .forms import (
     PhotographerJoinForm,
@@ -33,13 +34,17 @@ def photographer_join(request):
 
 def photographer_login(request):
     form = PhotographerLoginForm(request, data=request.POST or None)
+    next_url = request.POST.get("next") or request.GET.get("next")
 
     if request.method == "POST" and form.is_valid():
         login(request, form.get_user())
+        if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
+            return redirect(next_url)
         return redirect("photographer_dashboard")
 
     return render(request, "accounts/login.html", {
         "form": form,
+        "next": next_url,
     })
 
 
@@ -92,4 +97,6 @@ def photographer_dashboard(request):
         "project_form": project_form,
         "portfolio_images": photographer.portfolio_images.all(),
         "projects": photographer.projects.all(),
+        "booking_requests": photographer.booking_requests.all(),
+        "saved_photographers": request.user.saved_photographers.select_related("photographer").all(),
     })

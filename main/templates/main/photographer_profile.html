@@ -36,11 +36,20 @@
           <span><i class="fa fa-clock-o text-terracotta mr-1.5"></i>{{ photographer.years_experience }} year{{ photographer.years_experience|pluralize }} experience</span>
         </div>
       </div>
-      {% if user == photographer.user %}
-        <a href="{% url 'photographer_dashboard' %}" class="btn-primary px-7 py-3.5 text-[13px] font-medium uppercase tracking-wider text-center">Edit profile</a>
-      {% else %}
-        <a href="#contact" class="btn-primary px-7 py-3.5 text-[13px] font-medium uppercase tracking-wider text-center">Contact</a>
-      {% endif %}
+      <div class="flex flex-wrap gap-3">
+        {% if user == photographer.user %}
+          <a href="{% url 'photographer_dashboard' %}" class="btn-primary px-7 py-3.5 text-[13px] font-medium uppercase tracking-wider text-center">Edit profile</a>
+        {% else %}
+          <form method="post" action="{% url 'toggle_saved_photographer' photographer.pk %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <button type="submit" class="hairline px-5 py-3.5 text-[13px] font-medium uppercase tracking-wider hover:border-terracotta hover:text-terracotta">
+              <i class="fa {% if is_saved %}fa-heart{% else %}fa-heart-o{% endif %} mr-2"></i>{% if is_saved %}Saved{% else %}Save{% endif %}
+            </button>
+          </form>
+          <a href="#contact" class="btn-primary px-7 py-3.5 text-[13px] font-medium uppercase tracking-wider text-center">Request to book</a>
+        {% endif %}
+      </div>
     </div>
   </div>
 </section>
@@ -112,7 +121,7 @@
     <aside class="lg:col-span-1">
       <div id="contact" class="hairline bg-parchment p-7 sticky top-28">
         <span class="section-tag">Contact</span>
-        <h2 class="font-display text-2xl italic font-medium mt-4">Booking details</h2>
+        <h2 class="font-display text-2xl italic font-medium mt-4">Request to book</h2>
         <div class="space-y-3 mt-5 text-[14px] text-bark">
           {% if photographer.address %}
             <p><i class="fa fa-map-marker text-terracotta mr-2"></i>{{ photographer.address }}</p>
@@ -130,6 +139,26 @@
             <p class="text-[12px] uppercase tracking-wider text-bark pt-3">Price on request</p>
           {% endif %}
         </div>
+
+        {% if user == photographer.user %}
+          <p class="text-[13px] text-bark mt-6">This is your public profile. Booking requests from clients will appear in your dashboard.</p>
+        {% else %}
+          <form method="post" class="space-y-4 mt-7">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="book">
+            {% for field in booking_form %}
+              <div>
+                <label class="field-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                  <p class="error-msg">{{ field.errors.0 }}</p>
+                {% endif %}
+              </div>
+            {% endfor %}
+            <button type="submit" class="btn-primary w-full py-3.5 text-[13px] font-medium uppercase tracking-wider">Send request</button>
+            <p class="text-[12px] text-bark text-center">The photographer will see this in their dashboard.</p>
+          </form>
+        {% endif %}
       </div>
     </aside>
   </div>

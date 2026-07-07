@@ -27,6 +27,9 @@
               <span class="font-display text-3xl italic font-medium text-cream">{{ offer.discount_percent }}% off</span>
               <span class="text-[11px] font-medium uppercase tracking-wider text-bark">{{ offer.duration_label }}</span>
             </div>
+            <a href="{% url 'photographers_list' %}" class="btn-primary text-center mt-7 py-3 text-[12px] font-medium uppercase tracking-wider">
+              Find photographer
+            </a>
           </article>
         {% endfor %}
       </div>

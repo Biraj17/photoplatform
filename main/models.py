@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
 
+from accounts.models import Photographer
+
 
 class Offer(models.Model):
     title = models.CharField(max_length=120)
@@ -36,3 +38,32 @@ class Offer(models.Model):
         if days_left <= 31:
             return "This month"
         return f"Until {self.ends_at.strftime('%b %d, %Y')}"
+
+
+class BookingRequest(models.Model):
+    PACKAGE_CHOICES = [
+        ("Essential", "Essential"),
+        ("Signature", "Signature"),
+        ("Full Day", "Full Day"),
+        ("Custom", "Custom"),
+    ]
+
+    photographer = models.ForeignKey(
+        Photographer,
+        on_delete=models.CASCADE,
+        related_name="booking_requests",
+    )
+    client_name = models.CharField(max_length=120)
+    client_email = models.EmailField()
+    client_phone = models.CharField(max_length=30, blank=True)
+    shoot_date = models.DateField(blank=True, null=True)
+    package = models.CharField(max_length=20, choices=PACKAGE_CHOICES, default="Custom")
+    message = models.TextField(blank=True)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.client_name} -> {self.photographer.full_name}"

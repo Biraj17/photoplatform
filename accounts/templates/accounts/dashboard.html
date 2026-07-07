@@ -20,14 +20,6 @@
       </a>
     </div>
 
-    {% if messages %}
-      <div class="mt-8 space-y-3">
-        {% for message in messages %}
-          <div class="hairline bg-parchment p-4 text-[14px] text-bark">{{ message }}</div>
-        {% endfor %}
-      </div>
-    {% endif %}
-
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-10">
       <form method="post" enctype="multipart/form-data" class="lg:col-span-2 hairline bg-parchment p-7 space-y-5">
         {% csrf_token %}
@@ -87,6 +79,53 @@
             Save project
           </button>
         </form>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
+      <div>
+        <span class="section-tag">Booking Requests</span>
+        <div class="space-y-4 mt-5">
+          {% for booking in booking_requests %}
+            <article class="hairline bg-parchment p-5">
+              <div class="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <h3 class="font-display text-xl italic font-medium">{{ booking.client_name }}</h3>
+                  <p class="text-[13px] text-bark mt-1">{{ booking.package }}{% if booking.shoot_date %} · {{ booking.shoot_date }}{% endif %}</p>
+                </div>
+                <span class="text-[11px] uppercase tracking-wider text-bark">{{ booking.created_at|date:"M d, Y" }}</span>
+              </div>
+              <div class="text-[14px] text-bark mt-3 space-y-1">
+                <p><i class="fa fa-envelope text-terracotta mr-2"></i>{{ booking.client_email }}</p>
+                {% if booking.client_phone %}
+                  <p><i class="fa fa-phone text-terracotta mr-2"></i>{{ booking.client_phone }}</p>
+                {% endif %}
+              </div>
+              {% if booking.message %}
+                <p class="text-[14px] text-bark leading-relaxed mt-3">{{ booking.message }}</p>
+              {% endif %}
+            </article>
+          {% empty %}
+            <p class="text-bark text-[14px] mt-4">No booking requests yet.</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div>
+        <span class="section-tag">Saved Photographers</span>
+        <div class="space-y-4 mt-5">
+          {% for saved in saved_photographers %}
+            <article class="hairline bg-parchment p-5 flex items-center justify-between gap-4">
+              <div>
+                <h3 class="font-display text-xl italic font-medium">{{ saved.photographer.full_name }}</h3>
+                <p class="text-[13px] text-bark mt-1">{{ saved.photographer.specialty }} · {{ saved.photographer.city }}</p>
+              </div>
+              <a href="{% url 'photographer_profile_detail' saved.photographer.pk %}" class="text-terracotta text-[12px] font-medium uppercase tracking-wider hover:underline">Open</a>
+            </article>
+          {% empty %}
+            <p class="text-bark text-[14px] mt-4">No saved photographers yet.</p>
+          {% endfor %}
+        </div>
       </div>
     </div>
 

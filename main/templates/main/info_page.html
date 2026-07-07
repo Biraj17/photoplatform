@@ -1,0 +1,21 @@
+{% extends "main/base.html" %}
+
+{% block title %}{{ page.title }} — PhotoPlat{% endblock %}
+
+{% block content %}
+<div class="h-20"></div>
+
+<section class="py-24 bg-cream min-h-[calc(100vh-5rem)]">
+  <div class="max-w-4xl mx-auto px-6 lg:px-10">
+    <span class="section-tag">{{ page.eyebrow }}</span>
+    <h1 class="font-display text-4xl lg:text-5xl italic font-medium mt-4">{{ page.title }}</h1>
+    <div class="hairline bg-parchment p-8 mt-8">
+      <p class="text-bark leading-relaxed">{{ page.body }}</p>
+      <div class="flex flex-wrap gap-3 mt-7">
+        <a href="{% url 'photographers_list' %}" class="btn-primary px-6 py-3 text-[13px] font-medium uppercase tracking-wider">Browse photographers</a>
+        <a href="{% url 'photographer_join_page' %}" class="hairline px-6 py-3 text-[13px] font-medium uppercase tracking-wider hover:bg-espresso hover:text-cream hover:border-espresso">Join as photographer</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}

@@ -237,7 +237,7 @@
 
         <label class="flex items-start gap-3 text-[13px] text-bark pt-1">
           {{ form.terms }}
-          <span>I agree to PhotoPlat's <a href="#" class="text-terracotta hover:underline">Terms of Service</a> and <a href="#" class="text-terracotta hover:underline">Privacy Policy</a>.</span>
+          <span>I agree to PhotoPlat's <a href="{% url 'info_page' 'terms' %}" class="text-terracotta hover:underline">Terms of Service</a> and <a href="{% url 'info_page' 'privacy' %}" class="text-terracotta hover:underline">Privacy Policy</a>.</span>
         </label>
         {% if form.terms.errors %}
           <p class="error-msg">{{ form.terms.errors.0 }}</p>
@@ -252,21 +252,6 @@
         <button type="submit" class="btn-primary w-full py-3.5 text-[13px] font-medium uppercase tracking-wider mt-2">
           Create account
         </button>
-
-        <div class="flex items-center gap-3 pt-1">
-          <span class="flex-1 h-px" style="background: rgba(184,149,106,0.2);"></span>
-          <span class="text-[11px] uppercase tracking-wider text-bark">Or continue with</span>
-          <span class="flex-1 h-px" style="background: rgba(184,149,106,0.2);"></span>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <button type="button" class="hairline py-3 text-[13px] font-medium flex items-center justify-center gap-2 hover:border-terracotta hover:text-terracotta">
-            <i class="fa fa-google"></i> Google
-          </button>
-          <button type="button" class="hairline py-3 text-[13px] font-medium flex items-center justify-center gap-2 hover:border-terracotta hover:text-terracotta">
-            <i class="fa fa-facebook"></i> Facebook
-          </button>
-        </div>
 
       </form>
     </div>

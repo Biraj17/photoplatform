@@ -16,6 +16,30 @@
       </p>
     </div>
 
+    <form method="get" class="hairline bg-parchment p-5 mb-10 grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div>
+        <label class="field-label" for="id_q">Name</label>
+        <input id="id_q" name="q" value="{{ query }}" class="field-input" placeholder="Search by name">
+      </div>
+      <div>
+        <label class="field-label" for="id_specialty">Category</label>
+        <select id="id_specialty" name="specialty" class="field-input">
+          <option value="">All categories</option>
+          {% for value,label in specialties %}
+            <option value="{{ value }}" {% if active_specialty == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label class="field-label" for="id_location">Location</label>
+        <input id="id_location" name="location" value="{{ active_location }}" class="field-input" placeholder="Kathmandu">
+      </div>
+      <div class="flex items-end gap-3">
+        <button type="submit" class="btn-primary flex-1 py-3 text-[13px] font-medium uppercase tracking-wider">Filter</button>
+        <a href="{% url 'photographers_list' %}" class="hairline px-4 py-3 text-[13px] font-medium uppercase tracking-wider hover:bg-espresso hover:text-cream hover:border-espresso">Reset</a>
+      </div>
+    </form>
+
     {% if photographers %}
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {% for photographer in photographers %}
@@ -31,6 +55,13 @@
               <span class="absolute top-4 left-4 bg-cream text-[10px] font-medium uppercase tracking-wider px-3 py-1.5 text-espresso">
                 {{ photographer.specialty }}
               </span>
+              <form method="post" action="{% url 'toggle_saved_photographer' photographer.pk %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <button type="submit" class="absolute top-4 right-4 w-8 h-8 bg-cream/90 flex items-center justify-center text-espresso hover:text-terracotta" aria-label="Save photographer">
+                  <i class="fa fa-heart-o"></i>
+                </button>
+              </form>
             </div>
             <div class="p-6">
               <div class="flex items-center justify-between gap-3">

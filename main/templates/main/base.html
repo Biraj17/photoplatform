@@ -230,6 +230,16 @@
   </div>
 </header>
 
+{% if messages %}
+  <div class="fixed top-24 left-1/2 -translate-x-1/2 z-[60] w-[calc(100%-2rem)] max-w-2xl space-y-2">
+    {% for message in messages %}
+      <div class="hairline bg-parchment px-5 py-3 text-[14px] text-bark shadow-[0_18px_38px_-18px_rgba(59,43,31,0.35)]">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
 {% block content %}
 
 {% endblock content %}
@@ -255,31 +265,31 @@
       <div>
         <h4 class="text-cream text-[13px] font-medium uppercase tracking-wider mb-5">Explore</h4>
         <ul class="space-y-3 text-[14px]">
-          <li><a href="#" class="hover:text-terracotta">Wedding photographers</a></li>
-          <li><a href="#" class="hover:text-terracotta">Portrait photographers</a></li>
-          <li><a href="#" class="hover:text-terracotta">Family sessions</a></li>
-          <li><a href="#" class="hover:text-terracotta">Fashion photographers</a></li>
-          <li><a href="#" class="hover:text-terracotta">Travel photographers</a></li>
+          <li><a href="{% url 'photographers_list' %}?specialty=Wedding" class="hover:text-terracotta">Wedding photographers</a></li>
+          <li><a href="{% url 'photographers_list' %}?specialty=Portrait" class="hover:text-terracotta">Portrait photographers</a></li>
+          <li><a href="{% url 'photographers_list' %}?specialty=Family" class="hover:text-terracotta">Family sessions</a></li>
+          <li><a href="{% url 'photographers_list' %}?specialty=Fashion" class="hover:text-terracotta">Fashion photographers</a></li>
+          <li><a href="{% url 'photographers_list' %}?specialty=Travel" class="hover:text-terracotta">Travel photographers</a></li>
         </ul>
       </div>
 
       <div>
         <h4 class="text-cream text-[13px] font-medium uppercase tracking-wider mb-5">Company</h4>
         <ul class="space-y-3 text-[14px]">
-          <li><a href="#" class="hover:text-terracotta">About PhotoPlat</a></li>
-          <li><a href="#" class="hover:text-terracotta">How it works</a></li>
-          <li><a href="#" class="hover:text-terracotta">Careers</a></li>
-          <li><a href="#" class="hover:text-terracotta">Press</a></li>
+          <li><a href="{% url 'info_page' 'about' %}" class="hover:text-terracotta">About PhotoPlat</a></li>
+          <li><a href="{% url 'info_page' 'how-it-works' %}" class="hover:text-terracotta">How it works</a></li>
+          <li><a href="{% url 'info_page' 'careers' %}" class="hover:text-terracotta">Careers</a></li>
+          <li><a href="{% url 'info_page' 'press' %}" class="hover:text-terracotta">Press</a></li>
         </ul>
       </div>
 
       <div>
         <h4 class="text-cream text-[13px] font-medium uppercase tracking-wider mb-5">Support</h4>
         <ul class="space-y-3 text-[14px]">
-          <li><a href="#" class="hover:text-terracotta">Help center</a></li>
-          <li><a href="#" class="hover:text-terracotta">Trust & safety</a></li>
-          <li><a href="#" class="hover:text-terracotta">Cancellation policy</a></li>
-          <li><a href="#" class="hover:text-terracotta">Contact us</a></li>
+          <li><a href="{% url 'info_page' 'help' %}" class="hover:text-terracotta">Help center</a></li>
+          <li><a href="{% url 'info_page' 'trust' %}" class="hover:text-terracotta">Trust & safety</a></li>
+          <li><a href="{% url 'info_page' 'cancellation' %}" class="hover:text-terracotta">Cancellation policy</a></li>
+          <li><a href="{% url 'info_page' 'contact' %}" class="hover:text-terracotta">Contact us</a></li>
         </ul>
       </div>
 
@@ -288,9 +298,9 @@
     <div class="border-t mt-14 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[12px]" style="border-color: rgba(184,149,106,0.15);">
       <p>© 2026 PhotoPlat. All rights reserved.</p>
       <div class="flex gap-6">
-        <a href="#" class="hover:text-terracotta">Privacy Policy</a>
-        <a href="#" class="hover:text-terracotta">Terms of Service</a>
-        <a href="#" class="hover:text-terracotta">Sitemap</a>
+        <a href="{% url 'info_page' 'privacy' %}" class="hover:text-terracotta">Privacy Policy</a>
+        <a href="{% url 'info_page' 'terms' %}" class="hover:text-terracotta">Terms of Service</a>
+        <a href="{% url 'info_page' 'sitemap' %}" class="hover:text-terracotta">Sitemap</a>
       </div>
     </div>
   </div>

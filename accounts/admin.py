@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Photographer, PhotographerProject, PortfolioImage
+from .models import Photographer, PhotographerProject, PortfolioImage, SavedPhotographer
 
 
 @admin.register(Photographer)
@@ -22,4 +22,11 @@ class PortfolioImageAdmin(admin.ModelAdmin):
 class PhotographerProjectAdmin(admin.ModelAdmin):
     list_display = ("title", "photographer", "location", "completed_at", "created_at")
     search_fields = ("title", "photographer__full_name", "location")
+    readonly_fields = ("created_at",)
+
+
+@admin.register(SavedPhotographer)
+class SavedPhotographerAdmin(admin.ModelAdmin):
+    list_display = ("user", "photographer", "created_at")
+    search_fields = ("user__email", "photographer__full_name")
     readonly_fields = ("created_at",)
