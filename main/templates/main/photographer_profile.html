@@ -52,7 +52,9 @@
               <i class="fa {% if is_saved %}fa-heart{% else %}fa-heart-o{% endif %} mr-2"></i>{% if is_saved %}Saved{% else %}Save{% endif %}
             </button>
           </form>
-          <a href="#contact" class="btn-primary px-7 py-3.5 text-[13px] font-medium uppercase tracking-wider text-center">Request to book</a>
+          {% if photographer.is_kyc_verified %}
+            <a href="#contact" class="btn-primary px-7 py-3.5 text-[13px] font-medium uppercase tracking-wider text-center">Request to book</a>
+          {% endif %}
         {% endif %}
       </div>
     </div>
@@ -148,7 +150,7 @@
     <aside class="lg:col-span-1">
       <div id="contact" class="hairline bg-parchment p-7 sticky top-28">
         <span class="section-tag">Contact</span>
-        <h2 class="font-display text-2xl italic font-medium mt-4">Request to book</h2>
+        <h2 class="font-display text-2xl italic font-medium mt-4">{% if photographer.is_kyc_verified or user == photographer.user %}Request to book{% else %}Booking unavailable{% endif %}</h2>
         <div class="space-y-3 mt-5 text-[14px] text-bark">
           {% if photographer.address %}
             <p><i class="fa fa-map-marker text-terracotta mr-2"></i>{{ photographer.address }}</p>
@@ -169,7 +171,7 @@
 
         {% if user == photographer.user %}
           <p class="text-[13px] text-bark mt-6">This is your public profile. Booking requests from clients will appear in your dashboard.</p>
-        {% else %}
+        {% elif photographer.is_kyc_verified %}
           <form method="post" class="space-y-4 mt-7">
             {% csrf_token %}
             <input type="hidden" name="action" value="book">
@@ -185,6 +187,11 @@
             <button type="submit" class="btn-primary w-full py-3.5 text-[13px] font-medium uppercase tracking-wider">Send request</button>
             <p class="text-[12px] text-bark text-center">The photographer will see this in their dashboard.</p>
           </form>
+        {% else %}
+          <div class="hairline bg-cream p-4 mt-7 text-[13px] text-bark">
+            <i class="fa fa-clock-o text-terracotta mr-1.5"></i>
+            This photographer hasn't completed identity verification yet, so booking isn't available.
+          </div>
         {% endif %}
       </div>
     </aside>

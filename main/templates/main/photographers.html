@@ -43,7 +43,7 @@
     {% if photographers %}
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {% for photographer in photographers %}
-          <article class="card-lift bg-parchment hairline overflow-hidden">
+          <article class="card-lift bg-parchment hairline overflow-hidden reveal" data-reveal-group="photographers-list">
             <div class="relative h-52 {% if not photographer.profile_image %}{% cycle 'bg-gradient-to-br from-[#B8956A] to-[#7A5C3E]' 'bg-gradient-to-br from-[#C1684C] to-[#A85339]' 'bg-gradient-to-br from-[#9DAF8E] to-[#6B7A5E]' 'bg-gradient-to-br from-[#7A5C3E] to-[#3B2B1F]' %}{% endif %}">
               {% if photographer.profile_image %}
                 <img src="{{ photographer.profile_image.url }}" alt="{{ photographer.full_name }}" class="absolute inset-0 w-full h-full object-cover">

@@ -10,17 +10,17 @@
 
   <div class="relative max-w-7xl mx-auto px-6 lg:px-10 pt-20 pb-28 lg:pt-28 lg:pb-36">
     <div class="text-center max-w-3xl mx-auto">
-      <span class="section-tag justify-center">Across Nepal</span>
-      <h1 class="font-display mt-7 text-[2.6rem] sm:text-6xl lg:text-7xl font-medium italic leading-[1.05] tracking-tight">
+      <span class="section-tag justify-center hero-in">Across Nepal</span>
+      <h1 class="font-display mt-7 text-[2.6rem] sm:text-6xl lg:text-7xl font-medium italic leading-[1.05] tracking-tight hero-in hero-in-delay-1">
         Photographers worth <span class="text-terracotta">remembering</span> the moment by.
       </h1>
-      <p class="mt-6 text-lg text-bark max-w-xl mx-auto leading-relaxed">
+      <p class="mt-6 text-lg text-bark max-w-xl mx-auto leading-relaxed hero-in hero-in-delay-2">
         Browse curated portfolios from Kathmandu to Pokhara and beyond. Compare style, price, and availability — then book directly.
       </p>
     </div>
 
     <!-- Search "ticket stub" bar -->
-    <form action="{% url 'photographers_list' %}" method="get" class="mt-12 max-w-4xl mx-auto bg-cream hairline shadow-[0_24px_50px_-20px_rgba(59,43,31,0.18)]">
+    <form action="{% url 'photographers_list' %}" method="get" class="mt-12 max-w-4xl mx-auto bg-cream hairline shadow-[0_24px_50px_-20px_rgba(59,43,31,0.18)] hero-in hero-in-delay-3">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 lg:divide-x" style="border-color: rgba(184,149,106,0.2);">
 
         <div class="px-7 py-6">
@@ -80,7 +80,7 @@
     {% if offers %}
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         {% for offer in offers %}
-          <article class="dark-card-glow border p-9 flex flex-col" style="border-color: rgba(184,149,106,0.2); background: rgba(193,104,76,0.04);">
+          <article class="dark-card-glow border p-9 flex flex-col reveal" data-reveal-group="home-offers" style="border-color: rgba(184,149,106,0.2); background: rgba(193,104,76,0.04);">
             <i class="fa {{ offer.icon }} text-2xl text-terracotta mb-6"></i>
             <h3 class="font-display text-2xl italic font-medium text-cream mb-3">{{ offer.title }}</h3>
             {% if offer.photographer %}
@@ -130,7 +130,7 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       {% for photographer in photographers %}
-        <article class="card-lift bg-parchment hairline overflow-hidden">
+        <article class="card-lift bg-parchment hairline overflow-hidden reveal" data-reveal-group="home-photographers">
           <div class="relative h-52 {% if not photographer.profile_image %}{% cycle 'bg-gradient-to-br from-[#B8956A] to-[#7A5C3E]' 'bg-gradient-to-br from-[#C1684C] to-[#A85339]' 'bg-gradient-to-br from-[#9DAF8E] to-[#6B7A5E]' 'bg-gradient-to-br from-[#7A5C3E] to-[#3B2B1F]' %}{% endif %}">
             {% if photographer.profile_image %}
               <img src="{{ photographer.profile_image.url }}" alt="{{ photographer.full_name }}" class="absolute inset-0 w-full h-full object-cover">

@@ -166,6 +166,94 @@
     margin-bottom: 0.6rem;
   }
   .error-msg { font-size: 12px; color: #C1684C; margin-top: 0.4rem; }
+
+  /* ============ Motion polish ============ */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulseDot {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,0.55); }
+    50% { box-shadow: 0 0 0 4px rgba(255,255,255,0); }
+  }
+
+  .hero-in { animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .hero-in.hero-in-delay-1 { animation-delay: 0.08s; }
+  .hero-in.hero-in-delay-2 { animation-delay: 0.16s; }
+  .hero-in.hero-in-delay-3 { animation-delay: 0.24s; }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .btn-primary, .btn-secondary {
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .btn-primary:hover, .btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px -10px rgba(59,43,31,0.35);
+  }
+  .btn-primary:active, .btn-secondary:active {
+    transform: translateY(0);
+  }
+
+  .nav-underline {
+    position: relative;
+  }
+  .nav-underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 100%;
+    height: 1.5px;
+    background: #C1684C;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+  }
+  .nav-underline:hover::after {
+    transform: scaleX(1);
+  }
+
+  .status-pulse {
+    position: relative;
+  }
+  .status-pulse::before {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    margin-right: 6px;
+    animation: pulseDot 1.8s ease-in-out infinite;
+  }
+
+  #mobileMenu {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+  }
+  #mobileMenu.menu-open {
+    max-height: 32rem;
+    opacity: 1;
+  }
+
+  .brand-logo {
+    transition: transform 0.3s ease;
+  }
+  a:hover > .brand-logo {
+    transform: rotate(-4deg) scale(1.05);
+  }
 </style>
 </head>
 
@@ -190,9 +278,9 @@
     </a>
 
     <div class="hidden lg:flex items-center gap-10 text-[13px] font-medium uppercase tracking-wider text-bark">
-      <a href="{% url 'photographers_list' %}" class="hover:text-terracotta">Photographers</a>
-      <a href="{% url 'offers_list' %}" class="hover:text-terracotta">Offers</a>
-      <a href="{% url 'photographer_join_page' %}" class="hover:text-terracotta">For Photographers</a>
+      <a href="{% url 'photographers_list' %}" class="nav-underline hover:text-terracotta">Photographers</a>
+      <a href="{% url 'offers_list' %}" class="nav-underline hover:text-terracotta">Offers</a>
+      <a href="{% url 'photographer_join_page' %}" class="nav-underline hover:text-terracotta">For Photographers</a>
     </div>
 
     <div class="hidden lg:flex items-center gap-5">
@@ -207,12 +295,12 @@
       </a>
     </div>
 
-    <button class="lg:hidden w-10 h-10 flex items-center justify-center text-lg text-espresso" aria-label="Open menu" onclick="document.getElementById('mobileMenu').classList.toggle('hidden')">
+    <button class="lg:hidden w-10 h-10 flex items-center justify-center text-lg text-espresso" aria-label="Open menu" onclick="document.getElementById('mobileMenu').classList.toggle('menu-open')">
       <i class="fa fa-bars"></i>
     </button>
   </nav>
 
-  <div id="mobileMenu" class="hidden lg:hidden border-t px-6 py-6 space-y-5 navbar-glass" style="border-color: rgba(184,149,106,0.2);">
+  <div id="mobileMenu" class="lg:hidden border-t px-6 py-6 space-y-5 navbar-glass" style="border-color: rgba(184,149,106,0.2);">
     <a href="{% url 'photographers_list' %}" class="block text-sm uppercase tracking-wider font-medium">Photographers</a>
     <a href="{% url 'offers_list' %}" class="block text-sm uppercase tracking-wider font-medium">Offers</a>
     <a href="{% url 'photographer_join_page' %}" class="block text-sm uppercase tracking-wider font-medium">For Photographers</a>
@@ -303,6 +391,37 @@
     </div>
   </div>
 </footer>
+
+<script>
+  (function () {
+    var items = document.querySelectorAll('.reveal');
+    if (!items.length) return;
+
+    if (!('IntersectionObserver' in window)) {
+      items.forEach(function (el) { el.classList.add('is-visible'); });
+      return;
+    }
+
+    var groupIndex = {};
+    items.forEach(function (el) {
+      var group = el.dataset.revealGroup || 'default';
+      var i = groupIndex[group] || 0;
+      el.style.setProperty('--reveal-delay', Math.min(i, 5) * 80 + 'ms');
+      groupIndex[group] = i + 1;
+    });
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    items.forEach(function (el) { observer.observe(el); });
+  })();
+</script>
 
 </body>
 </html>

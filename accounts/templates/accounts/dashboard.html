@@ -21,7 +21,7 @@
               <i class="fa fa-exclamation-circle"></i> KYC Rejected
             </span>
           {% elif photographer.has_submitted_kyc %}
-            <span class="inline-flex items-center gap-1.5 bg-clay text-cream text-[11px] font-medium uppercase tracking-wider px-3 py-1.5">
+            <span class="status-pulse inline-flex items-center gap-1.5 bg-clay text-cream text-[11px] font-medium uppercase tracking-wider px-3 py-1.5">
               <i class="fa fa-clock-o"></i> KYC Pending Review
             </span>
           {% else %}
@@ -40,7 +40,7 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-10">
-      <form method="post" enctype="multipart/form-data" class="lg:col-span-2 hairline bg-parchment p-7 space-y-5">
+      <form method="post" enctype="multipart/form-data" class="lg:col-span-2 self-start hairline bg-parchment p-7 space-y-5">
         {% csrf_token %}
         <input type="hidden" name="action" value="save_profile">
         <h2 class="font-display text-2xl italic font-medium">Profile and contact</h2>
@@ -255,7 +255,7 @@
             <div class="flex items-center justify-between gap-3">
               <h3 class="font-display text-xl italic font-medium">{{ offer.title }}</h3>
               {% if offer.is_current %}
-                <span class="text-[10px] uppercase tracking-wider bg-moss text-cream px-2.5 py-1">Live</span>
+                <span class="status-pulse text-[10px] uppercase tracking-wider bg-moss text-cream px-2.5 py-1">Live</span>
               {% else %}
                 <span class="text-[10px] uppercase tracking-wider hairline text-bark px-2.5 py-1">Inactive</span>
               {% endif %}

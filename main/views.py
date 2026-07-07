@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -9,11 +10,14 @@ from accounts.models import Photographer, SavedPhotographer
 from .forms import BookingRequestForm, PhotographerSearchForm
 from .models import Offer
 
+# Site-wide offers (no photographer) or offers from a KYC-verified photographer only.
+PUBLISHABLE_OFFERS = Q(photographer__isnull=True) | Q(photographer__kyc_status=Photographer.KYC_VERIFIED)
+
 
 def home(request):
     today = timezone.localdate()
     photographers = Photographer.objects.select_related("user").order_by("-rating", "-created_at")[:4]
-    offers = Offer.objects.filter(is_active=True, ends_at__gte=today)[:3]
+    offers = Offer.objects.filter(PUBLISHABLE_OFFERS, is_active=True, ends_at__gte=today).select_related("photographer")[:3]
     return render(request, "main/home.html", {
         "search_form": PhotographerSearchForm(),
         "photographers": photographers,
@@ -36,9 +40,15 @@ def profile_photographer(request, pk=None):
             pk=pk,
         )
     today = timezone.localdate()
-    photographer_offers = photographer.offers.filter(is_active=True, ends_at__gte=today)
+    if photographer.is_kyc_verified:
+        photographer_offers = photographer.offers.filter(is_active=True, ends_at__gte=today)
+    else:
+        photographer_offers = Offer.objects.none()
     booking_form = BookingRequestForm(request.POST or None)
     if request.method == "POST" and request.POST.get("action") == "book":
+        if not photographer.is_kyc_verified:
+            messages.error(request, "This photographer isn't verified yet, so booking isn't available.")
+            return redirect("photographer_profile_detail", pk=photographer.pk)
         if booking_form.is_valid():
             booking_request = booking_form.save(commit=False)
             booking_request.photographer = photographer
@@ -84,7 +94,7 @@ def photographers_list(request):
 
 def offers_list(request):
     today = timezone.localdate()
-    offers = Offer.objects.filter(is_active=True, ends_at__gte=today)
+    offers = Offer.objects.filter(PUBLISHABLE_OFFERS, is_active=True, ends_at__gte=today).select_related("photographer")
     return render(request, "main/offers.html", {
         "offers": offers,
     })
