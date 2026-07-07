@@ -11,6 +11,15 @@ class Photographer(models.Model):
         ("Travel", "Travel"),
     ]
 
+    KYC_PENDING = "Pending"
+    KYC_VERIFIED = "Verified"
+    KYC_REJECTED = "Rejected"
+    KYC_STATUS_CHOICES = [
+        (KYC_PENDING, "Pending"),
+        (KYC_VERIFIED, "Verified"),
+        (KYC_REJECTED, "Rejected"),
+    ]
+
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -29,11 +38,26 @@ class Photographer(models.Model):
     profile_image = models.FileField(upload_to="photographers/profiles/", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    citizenship_number = models.CharField(max_length=40, blank=True)
+    citizenship_front = models.FileField(upload_to="photographers/kyc/", blank=True)
+    citizenship_back = models.FileField(upload_to="photographers/kyc/", blank=True)
+    kyc_status = models.CharField(max_length=10, choices=KYC_STATUS_CHOICES, default=KYC_PENDING)
+    kyc_submitted_at = models.DateTimeField(blank=True, null=True)
+    kyc_reviewed_at = models.DateTimeField(blank=True, null=True)
+
     class Meta:
         ordering = ["-created_at"]
 
     def __str__(self):
         return self.full_name
+
+    @property
+    def is_kyc_verified(self):
+        return self.kyc_status == self.KYC_VERIFIED
+
+    @property
+    def has_submitted_kyc(self):
+        return bool(self.citizenship_number and self.citizenship_front and self.citizenship_back)
 
 
 class PortfolioImage(models.Model):

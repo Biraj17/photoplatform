@@ -10,7 +10,26 @@
     <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
       <div>
         <span class="section-tag">Photographer Dashboard</span>
-        <h1 class="font-display text-4xl lg:text-5xl italic font-medium mt-4">{{ photographer.full_name }}</h1>
+        <div class="flex flex-wrap items-center gap-3 mt-4">
+          <h1 class="font-display text-4xl lg:text-5xl italic font-medium">{{ photographer.full_name }}</h1>
+          {% if photographer.kyc_status == "Verified" %}
+            <span class="inline-flex items-center gap-1.5 bg-moss text-cream text-[11px] font-medium uppercase tracking-wider px-3 py-1.5">
+              <i class="fa fa-check-circle"></i> KYC Verified
+            </span>
+          {% elif photographer.kyc_status == "Rejected" %}
+            <span class="inline-flex items-center gap-1.5 bg-terracotta text-cream text-[11px] font-medium uppercase tracking-wider px-3 py-1.5">
+              <i class="fa fa-exclamation-circle"></i> KYC Rejected
+            </span>
+          {% elif photographer.has_submitted_kyc %}
+            <span class="inline-flex items-center gap-1.5 bg-clay text-cream text-[11px] font-medium uppercase tracking-wider px-3 py-1.5">
+              <i class="fa fa-clock-o"></i> KYC Pending Review
+            </span>
+          {% else %}
+            <span class="inline-flex items-center gap-1.5 hairline text-bark text-[11px] font-medium uppercase tracking-wider px-3 py-1.5">
+              <i class="fa fa-id-card-o"></i> KYC Not Submitted
+            </span>
+          {% endif %}
+        </div>
         <p class="text-bark mt-3 max-w-2xl leading-relaxed">
           Update your public details, add portfolio photos, and list projects you have completed.
         </p>
@@ -80,6 +99,40 @@
           </button>
         </form>
       </div>
+    </div>
+
+    <div class="hairline bg-parchment p-7 mt-8">
+      <span class="section-tag">Identity Verification</span>
+      <h2 class="font-display text-2xl italic font-medium mt-4">KYC verification</h2>
+
+      {% if photographer.kyc_status == "Verified" %}
+        <p class="text-bark mt-2 text-[14px]">Your identity has been verified. This unlocks the verified badge on your public profile.</p>
+      {% elif photographer.kyc_status == "Rejected" %}
+        <p class="text-bark mt-2 text-[14px]">Your last submission was rejected. Please check your details and re-submit.</p>
+      {% elif photographer.has_submitted_kyc %}
+        <p class="text-bark mt-2 text-[14px]">Your documents are pending review. This usually takes a short while — no action needed.</p>
+      {% else %}
+        <p class="text-bark mt-2 text-[14px]">Submit your citizenship details to get a verified badge on your public profile. This helps clients trust your profile.</p>
+      {% endif %}
+
+      <form method="post" enctype="multipart/form-data" class="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-6">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="save_kyc">
+        {% for field in kyc_form %}
+          <div>
+            <label class="field-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+              <p class="error-msg">{{ field.errors.0 }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+        <div class="sm:col-span-3">
+          <button type="submit" class="btn-primary px-7 py-3 text-[13px] font-medium uppercase tracking-wider">
+            {% if photographer.has_submitted_kyc %}Re-submit for verification{% else %}Submit for verification{% endif %}
+          </button>
+        </div>
+      </form>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">

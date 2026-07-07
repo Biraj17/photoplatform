@@ -29,6 +29,11 @@
         <div class="flex flex-wrap items-center gap-3">
           <h1 class="font-display text-4xl lg:text-5xl italic font-medium">{{ photographer.full_name }}</h1>
           <span class="bg-espresso text-cream text-[10px] font-medium uppercase tracking-wider px-3 py-1.5">{{ photographer.specialty }}</span>
+          {% if photographer.is_kyc_verified %}
+            <span class="inline-flex items-center gap-1.5 bg-moss text-cream text-[10px] font-medium uppercase tracking-wider px-3 py-1.5" title="Identity verified by PhotoPlat">
+              <i class="fa fa-check-circle"></i> Verified
+            </span>
+          {% endif %}
         </div>
         <div class="flex flex-wrap items-center gap-x-6 gap-y-1.5 mt-3 text-bark text-[14px]">
           <span><i class="fa fa-map-marker text-terracotta mr-1.5"></i>{{ photographer.city }}</span>

@@ -122,6 +122,22 @@ class PhotographerProfileForm(forms.ModelForm):
         }
 
 
+class PhotographerKYCForm(forms.ModelForm):
+    class Meta:
+        model = Photographer
+        fields = ["citizenship_number", "citizenship_front", "citizenship_back"]
+        labels = {
+            "citizenship_number": "Citizenship Number",
+            "citizenship_front": "Citizenship Photo (Front)",
+            "citizenship_back": "Citizenship Photo (Back)",
+        }
+        widgets = {
+            "citizenship_number": forms.TextInput(attrs={"class": FIELD_CLASS, "placeholder": "e.g. 12-01-70-12345"}),
+            "citizenship_front": forms.FileInput(attrs={"class": FIELD_CLASS, "accept": "image/*"}),
+            "citizenship_back": forms.FileInput(attrs={"class": FIELD_CLASS, "accept": "image/*"}),
+        }
+
+
 class PortfolioImageForm(forms.ModelForm):
     class Meta:
         model = PortfolioImage

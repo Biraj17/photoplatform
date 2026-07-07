@@ -2,10 +2,12 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
+from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
 
 from .forms import (
     PhotographerJoinForm,
+    PhotographerKYCForm,
     PhotographerLoginForm,
     PhotographerProfileForm,
     PhotographerProjectForm,
@@ -62,6 +64,7 @@ def photographer_dashboard(request):
         return redirect("photographer_join_page")
 
     profile_form = PhotographerProfileForm(instance=photographer)
+    kyc_form = PhotographerKYCForm(instance=photographer)
     image_form = PortfolioImageForm()
     project_form = PhotographerProjectForm()
 
@@ -72,6 +75,16 @@ def photographer_dashboard(request):
             if profile_form.is_valid():
                 profile_form.save()
                 messages.success(request, "Profile details updated.")
+                return redirect("photographer_dashboard")
+        elif action == "save_kyc":
+            kyc_form = PhotographerKYCForm(request.POST, request.FILES, instance=photographer)
+            if kyc_form.is_valid():
+                submission = kyc_form.save(commit=False)
+                submission.kyc_status = Photographer.KYC_PENDING
+                submission.kyc_submitted_at = timezone.now()
+                submission.kyc_reviewed_at = None
+                submission.save()
+                messages.success(request, "KYC documents submitted. Your verification is now pending review.")
                 return redirect("photographer_dashboard")
         elif action == "add_image":
             image_form = PortfolioImageForm(request.POST, request.FILES)
@@ -93,6 +106,7 @@ def photographer_dashboard(request):
     return render(request, "accounts/dashboard.html", {
         "photographer": photographer,
         "profile_form": profile_form,
+        "kyc_form": kyc_form,
         "image_form": image_form,
         "project_form": project_form,
         "portfolio_images": photographer.portfolio_images.all(),

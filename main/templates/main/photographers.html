@@ -65,7 +65,12 @@
             </div>
             <div class="p-6">
               <div class="flex items-center justify-between gap-3">
-                <h2 class="font-display text-xl italic font-medium">{{ photographer.full_name }}</h2>
+                <h2 class="font-display text-xl italic font-medium flex items-center gap-1.5">
+                  {{ photographer.full_name }}
+                  {% if photographer.is_kyc_verified %}
+                    <i class="fa fa-check-circle text-moss text-sm" title="Identity verified"></i>
+                  {% endif %}
+                </h2>
                 <span class="flex items-center gap-1 text-sm font-medium shrink-0">
                   <i class="fa fa-star text-terracotta"></i> {{ photographer.rating }}
                 </span>
