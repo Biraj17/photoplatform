@@ -1,10 +1,6 @@
-import secrets
-
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -24,39 +20,6 @@ from .models import Photographer
 
 def register(request):
     return render(request, "accounts/register.html")
-
-
-def bootstrap_admin(request):
-    """One-time self-contained setup endpoint — generates its own admin
-    credentials, no environment variables required. Permanently inert once
-    any superuser exists. Remove this view once you've logged in."""
-    if User.objects.filter(is_superuser=True).exists():
-        return HttpResponse(
-            "A superuser already exists. This endpoint is now inactive.\n"
-            "Go to /admin/ to log in.",
-            content_type="text/plain",
-        )
-
-    username = "admin"
-    password = secrets.token_urlsafe(16)
-
-    if User.objects.filter(username=username).exists():
-        user = User.objects.get(username=username)
-    else:
-        user = User(username=username, email="admin@photoplat.local")
-    user.set_password(password)
-    user.is_staff = True
-    user.is_superuser = True
-    user.is_active = True
-    user.save()
-
-    return HttpResponse(
-        "Superuser ready. SAVE THIS NOW — it will not be shown again:\n\n"
-        f"Username: {username}\n"
-        f"Password: {password}\n\n"
-        "Log in at /admin/.",
-        content_type="text/plain",
-    )
 
 
 def photographer_join(request):

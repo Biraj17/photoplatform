@@ -9,7 +9,7 @@ services:
     name: photoplat
     runtime: python
     plan: free
-    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate && (python manage.py createsuperuser --noinput || true)"
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate"
     startCommand: "gunicorn project.wsgi:application"
     envVars:
       - key: SECRET_KEY
@@ -22,9 +22,3 @@ services:
         fromDatabase:
           name: photoplat-db
           property: connectionString
-      - key: DJANGO_SUPERUSER_USERNAME
-        sync: false
-      - key: DJANGO_SUPERUSER_EMAIL
-        sync: false
-      - key: DJANGO_SUPERUSER_PASSWORD
-        sync: false
