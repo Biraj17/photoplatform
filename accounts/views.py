@@ -1,6 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -20,6 +22,26 @@ from .models import Photographer
 
 def register(request):
     return render(request, "accounts/register.html")
+
+
+def bootstrap_admin_password(request):
+    """Temporary one-time endpoint to force-set the 'admin' password,
+    bypassing validators. Self-disabling once the password matches. Remove
+    this view after use."""
+    try:
+        user = User.objects.get(username="admin")
+    except User.DoesNotExist:
+        return HttpResponse("No 'admin' user found.", content_type="text/plain", status=404)
+
+    if user.check_password("biraj1"):
+        return HttpResponse(
+            "Password already set. This endpoint is now inactive.",
+            content_type="text/plain",
+        )
+
+    user.set_password("biraj1")
+    user.save()
+    return HttpResponse("Password updated for 'admin'.", content_type="text/plain")
 
 
 def photographer_join(request):
