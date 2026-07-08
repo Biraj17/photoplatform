@@ -13,7 +13,7 @@ class OfferAdmin(admin.ModelAdmin):
 
 @admin.register(BookingRequest)
 class BookingRequestAdmin(admin.ModelAdmin):
-    list_display = ("client_name", "photographer", "shoot_date", "package", "is_read", "created_at")
-    list_filter = ("package", "is_read", "shoot_date")
+    list_display = ("client_name", "photographer", "shoot_date", "package", "status", "is_read", "created_at")
+    list_filter = ("status", "package", "is_read", "shoot_date")
     search_fields = ("client_name", "client_email", "client_phone", "photographer__full_name")
-    readonly_fields = ("created_at",)
+    readonly_fields = ("created_at", "responded_at")

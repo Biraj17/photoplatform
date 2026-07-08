@@ -56,6 +56,15 @@ class BookingRequest(models.Model):
         ("Custom", "Custom"),
     ]
 
+    STATUS_PENDING = "Pending"
+    STATUS_ACCEPTED = "Accepted"
+    STATUS_REJECTED = "Rejected"
+    STATUS_CHOICES = [
+        (STATUS_PENDING, "Pending"),
+        (STATUS_ACCEPTED, "Accepted"),
+        (STATUS_REJECTED, "Rejected"),
+    ]
+
     photographer = models.ForeignKey(
         Photographer,
         on_delete=models.CASCADE,
@@ -68,6 +77,8 @@ class BookingRequest(models.Model):
     package = models.CharField(max_length=20, choices=PACKAGE_CHOICES, default="Custom")
     message = models.TextField()
     is_read = models.BooleanField(default=False)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=STATUS_PENDING)
+    responded_at = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

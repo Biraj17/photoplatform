@@ -5,7 +5,9 @@ from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
 
+from main.emails import send_booking_decision_email
 from main.forms import PhotographerOfferForm
+from main.models import BookingRequest
 
 from .forms import (
     PhotographerJoinForm,
@@ -105,6 +107,11 @@ def photographer_dashboard(request):
                 project.save()
                 messages.success(request, "Project added.")
                 return redirect("photographer_dashboard")
+        elif action == "delete_project":
+            deleted, _ = photographer.projects.filter(pk=request.POST.get("project_id")).delete()
+            if deleted:
+                messages.success(request, "Project removed.")
+            return redirect("photographer_dashboard")
         elif action == "add_offer":
             offer_form = PhotographerOfferForm(request.POST)
             if offer_form.is_valid():
@@ -113,6 +120,26 @@ def photographer_dashboard(request):
                 offer.save()
                 messages.success(request, "Offer added to your public profile.")
                 return redirect("photographer_dashboard")
+        elif action == "delete_offer":
+            deleted, _ = photographer.offers.filter(pk=request.POST.get("offer_id")).delete()
+            if deleted:
+                messages.success(request, "Offer cancelled.")
+            return redirect("photographer_dashboard")
+        elif action in ("accept_booking", "reject_booking"):
+            booking = photographer.booking_requests.filter(pk=request.POST.get("booking_id")).first()
+            if booking:
+                accepted = action == "accept_booking"
+                booking.status = BookingRequest.STATUS_ACCEPTED if accepted else BookingRequest.STATUS_REJECTED
+                booking.responded_at = timezone.now()
+                booking.is_read = True
+                booking.save()
+                send_booking_decision_email(booking, accepted=accepted)
+                messages.success(
+                    request,
+                    f"Booking {'accepted' if accepted else 'declined'}. "
+                    f"{booking.client_name} has been notified by email.",
+                )
+            return redirect("photographer_dashboard")
 
     return render(request, "accounts/dashboard.html", {
         "photographer": photographer,

@@ -130,7 +130,7 @@
           <h2 class="font-display text-3xl italic font-medium mt-4 mb-6">Offers from {{ photographer.full_name }}</h2>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {% for offer in photographer_offers %}
-              <article class="hairline bg-parchment p-6">
+              <article class="card-lift hairline bg-parchment p-6">
                 <i class="fa {{ offer.icon }} text-xl text-terracotta mb-4"></i>
                 <h3 class="font-display text-xl italic font-medium">{{ offer.title }}</h3>
                 {% if offer.description %}
