@@ -38,7 +38,7 @@ class Photographer(models.Model):
     profile_image = models.FileField(upload_to="photographers/profiles/", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    citizenship_number = models.CharField(max_length=40, blank=True)
+    citizenship_number = models.CharField(max_length=40)
     citizenship_front = models.FileField(upload_to="photographers/kyc/", blank=True)
     citizenship_back = models.FileField(upload_to="photographers/kyc/", blank=True)
     kyc_status = models.CharField(max_length=10, choices=KYC_STATUS_CHOICES, default=KYC_PENDING)
