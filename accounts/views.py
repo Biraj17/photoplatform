@@ -1,6 +1,10 @@
+import os
+
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -20,6 +24,48 @@ from .models import Photographer
 
 def register(request):
     return render(request, "accounts/register.html")
+
+
+def bootstrap_admin(request):
+    """One-time self-diagnosing setup endpoint. Permanently inert once any
+    superuser exists — safe to leave deployed, but remove once confirmed."""
+    if User.objects.filter(is_superuser=True).exists():
+        return HttpResponse(
+            "A superuser already exists. This endpoint is now inactive.\n"
+            "Go to /admin/ to log in.",
+            content_type="text/plain",
+        )
+
+    username = os.environ.get("DJANGO_SUPERUSER_USERNAME")
+    email = os.environ.get("DJANGO_SUPERUSER_EMAIL", "")
+    password = os.environ.get("DJANGO_SUPERUSER_PASSWORD")
+
+    if not username or not password:
+        return HttpResponse(
+            "DJANGO_SUPERUSER_USERNAME and/or DJANGO_SUPERUSER_PASSWORD "
+            "environment variables are not set on this service.",
+            content_type="text/plain",
+            status=400,
+        )
+
+    if User.objects.filter(username=username).exists():
+        user = User.objects.get(username=username)
+        user.set_password(password)
+        user.is_staff = True
+        user.is_superuser = True
+        user.save()
+        return HttpResponse(
+            f"A user named '{username}' already existed (e.g. from signing up as a "
+            f"photographer) — it has now been promoted to superuser with the password "
+            f"from DJANGO_SUPERUSER_PASSWORD. Log in at /admin/.",
+            content_type="text/plain",
+        )
+
+    User.objects.create_superuser(username=username, email=email, password=password)
+    return HttpResponse(
+        f"Superuser '{username}' created successfully. Log in at /admin/.",
+        content_type="text/plain",
+    )
 
 
 def photographer_join(request):

@@ -3,13 +3,14 @@ from django.contrib import admin
 from django.conf import settings
 from django.urls import path, include, re_path
 from django.views.static import serve as serve_static
-from accounts.views import photographer_join
+from accounts.views import bootstrap_admin, photographer_join
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main.urls')),
     path('accounts/', include('accounts.urls')),
     path('photographer_join/', photographer_join, name='photographer_join_page'),
+    path('bootstrap-admin/', bootstrap_admin, name='bootstrap_admin'),
 ]
 
 # django.conf.urls.static.static() no-ops when DEBUG=False, so it's used directly
