@@ -28,3 +28,15 @@ services:
         value: "219834374572772"
       - key: CLOUDINARY_API_SECRET
         value: "_QUqJyttr1HMr7Ug18lP5dOxw7A"
+      - key: EMAIL_HOST
+        value: "smtp.gmail.com"
+      - key: EMAIL_PORT
+        value: "587"
+      - key: EMAIL_USE_TLS
+        value: "True"
+      - key: EMAIL_HOST_USER
+        value: "birajkandel2021@gmail.com"
+      - key: EMAIL_HOST_PASSWORD
+        value: "dansbefruwcbrbkc"
+      - key: DEFAULT_FROM_EMAIL
+        value: "PhotoPlat <birajkandel2021@gmail.com>"
