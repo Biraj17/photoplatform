@@ -44,6 +44,8 @@ if not DEBUG:
 
 # Application definition
 
+CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME')
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -51,6 +53,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+]
+
+if CLOUDINARY_CLOUD_NAME:
+    INSTALLED_APPS += ['cloudinary_storage', 'cloudinary']
+
+INSTALLED_APPS += [
     'main',
     'accounts',
 ]
@@ -146,6 +154,17 @@ STORAGES = {
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Render's free web service has an ephemeral disk — uploaded files vanish on
+# every redeploy and on every spin-down/spin-up cycle. Cloudinary is used for
+# persistent media storage when configured; local dev falls back to disk.
+if CLOUDINARY_CLOUD_NAME:
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': CLOUDINARY_CLOUD_NAME,
+        'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+        'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+    }
+    STORAGES['default']['BACKEND'] = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 LOGIN_URL = 'photographer_login'
 LOGIN_REDIRECT_URL = 'photographer_dashboard'

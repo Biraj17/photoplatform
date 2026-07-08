@@ -22,3 +22,9 @@ services:
         fromDatabase:
           name: photoplat-db
           property: connectionString
+      - key: CLOUDINARY_CLOUD_NAME
+        value: "bvx7id2m"
+      - key: CLOUDINARY_API_KEY
+        value: "219834374572772"
+      - key: CLOUDINARY_API_SECRET
+        value: "_QUqJyttr1HMr7Ug18lP5dOxw7A"
