@@ -1,4 +1,4 @@
-import os
+import secrets
 
 from django.contrib import messages
 from django.contrib.auth import login, logout
@@ -27,8 +27,9 @@ def register(request):
 
 
 def bootstrap_admin(request):
-    """One-time self-diagnosing setup endpoint. Permanently inert once any
-    superuser exists — safe to leave deployed, but remove once confirmed."""
+    """One-time self-contained setup endpoint — generates its own admin
+    credentials, no environment variables required. Permanently inert once
+    any superuser exists. Remove this view once you've logged in."""
     if User.objects.filter(is_superuser=True).exists():
         return HttpResponse(
             "A superuser already exists. This endpoint is now inactive.\n"
@@ -36,34 +37,24 @@ def bootstrap_admin(request):
             content_type="text/plain",
         )
 
-    username = os.environ.get("DJANGO_SUPERUSER_USERNAME")
-    email = os.environ.get("DJANGO_SUPERUSER_EMAIL", "")
-    password = os.environ.get("DJANGO_SUPERUSER_PASSWORD")
-
-    if not username or not password:
-        return HttpResponse(
-            "DJANGO_SUPERUSER_USERNAME and/or DJANGO_SUPERUSER_PASSWORD "
-            "environment variables are not set on this service.",
-            content_type="text/plain",
-            status=400,
-        )
+    username = "admin"
+    password = secrets.token_urlsafe(16)
 
     if User.objects.filter(username=username).exists():
         user = User.objects.get(username=username)
-        user.set_password(password)
-        user.is_staff = True
-        user.is_superuser = True
-        user.save()
-        return HttpResponse(
-            f"A user named '{username}' already existed (e.g. from signing up as a "
-            f"photographer) — it has now been promoted to superuser with the password "
-            f"from DJANGO_SUPERUSER_PASSWORD. Log in at /admin/.",
-            content_type="text/plain",
-        )
+    else:
+        user = User(username=username, email="admin@photoplat.local")
+    user.set_password(password)
+    user.is_staff = True
+    user.is_superuser = True
+    user.is_active = True
+    user.save()
 
-    User.objects.create_superuser(username=username, email=email, password=password)
     return HttpResponse(
-        f"Superuser '{username}' created successfully. Log in at /admin/.",
+        "Superuser ready. SAVE THIS NOW — it will not be shown again:\n\n"
+        f"Username: {username}\n"
+        f"Password: {password}\n\n"
+        "Log in at /admin/.",
         content_type="text/plain",
     )
 
