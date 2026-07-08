@@ -151,6 +151,9 @@ def photographer_dashboard(request):
         "portfolio_images": photographer.portfolio_images.all(),
         "projects": photographer.projects.all(),
         "offers": photographer.offers.all(),
-        "booking_requests": photographer.booking_requests.all(),
+        "booking_requests": photographer.booking_requests.filter(status=BookingRequest.STATUS_PENDING),
+        "booking_history": photographer.booking_requests.exclude(
+            status=BookingRequest.STATUS_PENDING
+        ).order_by("-responded_at"),
         "saved_photographers": request.user.saved_photographers.select_related("photographer").all(),
     })

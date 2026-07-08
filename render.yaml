@@ -23,11 +23,11 @@ services:
           name: photoplat-db
           property: connectionString
       - key: CLOUDINARY_CLOUD_NAME
-        value: "bvx7id2m"
+        sync: false
       - key: CLOUDINARY_API_KEY
-        value: "219834374572772"
+        sync: false
       - key: CLOUDINARY_API_SECRET
-        value: "_QUqJyttr1HMr7Ug18lP5dOxw7A"
+        sync: false
       - key: EMAIL_HOST
         value: "smtp.gmail.com"
       - key: EMAIL_PORT
@@ -35,8 +35,8 @@ services:
       - key: EMAIL_USE_TLS
         value: "True"
       - key: EMAIL_HOST_USER
-        value: "birajkandel2021@gmail.com"
+        sync: false
       - key: EMAIL_HOST_PASSWORD
-        value: "dansbefruwcbrbkc"
+        sync: false
       - key: DEFAULT_FROM_EMAIL
-        value: "PhotoPlat <birajkandel2021@gmail.com>"
+        sync: false

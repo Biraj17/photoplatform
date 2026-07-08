@@ -1,5 +1,9 @@
+import logging
+
 from django.conf import settings
 from django.core.mail import send_mail
+
+logger = logging.getLogger(__name__)
 
 
 def send_booking_decision_email(booking, accepted):
@@ -28,10 +32,18 @@ def send_booking_decision_email(booking, accepted):
             "— PhotoPlat"
         )
 
-    send_mail(
-        subject,
-        body,
-        settings.DEFAULT_FROM_EMAIL,
-        [booking.client_email],
-        fail_silently=True,
-    )
+    try:
+        send_mail(
+            subject,
+            body,
+            settings.DEFAULT_FROM_EMAIL,
+            [booking.client_email],
+            fail_silently=False,
+        )
+    except Exception:
+        logger.exception(
+            "Failed to send booking %s email to %s for booking id=%s",
+            "acceptance" if accepted else "rejection",
+            booking.client_email,
+            booking.pk,
+        )

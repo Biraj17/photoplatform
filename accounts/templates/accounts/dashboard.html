@@ -166,12 +166,59 @@
                 </div>
                 <div class="flex flex-col items-end gap-1.5">
                   <span class="text-[11px] uppercase tracking-wider text-bark">{{ booking.created_at|date:"M d, Y" }}</span>
+                  <span class="status-pulse text-[10px] uppercase tracking-wider bg-clay text-cream px-2.5 py-1">Pending</span>
+                </div>
+              </div>
+              <div class="text-[14px] text-bark mt-3 space-y-1">
+                <p><i class="fa fa-envelope text-terracotta mr-2"></i>{{ booking.client_email }}</p>
+                {% if booking.client_phone %}
+                  <p><i class="fa fa-phone text-terracotta mr-2"></i>{{ booking.client_phone }}</p>
+                {% endif %}
+              </div>
+              {% if booking.message %}
+                <p class="text-[14px] text-bark leading-relaxed mt-3">{{ booking.message }}</p>
+              {% endif %}
+              <div class="flex gap-3 mt-4">
+                <form method="post" onsubmit="return confirm('Accept this booking request?');">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="accept_booking">
+                  <input type="hidden" name="booking_id" value="{{ booking.pk }}">
+                  <button type="submit" class="btn-primary px-5 py-2 text-[12px] font-medium uppercase tracking-wider">
+                    <i class="fa fa-check mr-1"></i>Accept
+                  </button>
+                </form>
+                <form method="post" onsubmit="return confirm('Reject this booking request?');">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="reject_booking">
+                  <input type="hidden" name="booking_id" value="{{ booking.pk }}">
+                  <button type="submit" class="hairline px-5 py-2 text-[12px] font-medium uppercase tracking-wider hover:border-terracotta hover:text-terracotta">
+                    <i class="fa fa-times mr-1"></i>Reject
+                  </button>
+                </form>
+              </div>
+            </article>
+          {% empty %}
+            <p class="text-bark text-[14px] mt-4">No pending booking requests.</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div>
+        <span class="section-tag">Booking History</span>
+        <div class="space-y-4 mt-5">
+          {% for booking in booking_history %}
+            <article class="hairline bg-parchment p-5">
+              <div class="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <h3 class="font-display text-xl italic font-medium">{{ booking.client_name }}</h3>
+                  <p class="text-[13px] text-bark mt-1">{{ booking.package }}{% if booking.shoot_date %} · {{ booking.shoot_date }}{% endif %}</p>
+                </div>
+                <div class="flex flex-col items-end gap-1.5">
+                  <span class="text-[11px] uppercase tracking-wider text-bark">{{ booking.responded_at|date:"M d, Y" }}</span>
                   {% if booking.status == "Accepted" %}
                     <span class="text-[10px] uppercase tracking-wider bg-moss text-cream px-2.5 py-1">Accepted</span>
-                  {% elif booking.status == "Rejected" %}
-                    <span class="text-[10px] uppercase tracking-wider bg-terracotta text-cream px-2.5 py-1">Rejected</span>
                   {% else %}
-                    <span class="status-pulse text-[10px] uppercase tracking-wider bg-clay text-cream px-2.5 py-1">Pending</span>
+                    <span class="text-[10px] uppercase tracking-wider bg-terracotta text-cream px-2.5 py-1">Rejected</span>
                   {% endif %}
                 </div>
               </div>
@@ -184,33 +231,15 @@
               {% if booking.message %}
                 <p class="text-[14px] text-bark leading-relaxed mt-3">{{ booking.message }}</p>
               {% endif %}
-              {% if booking.status == "Pending" %}
-                <div class="flex gap-3 mt-4">
-                  <form method="post" onsubmit="return confirm('Accept this booking request?');">
-                    {% csrf_token %}
-                    <input type="hidden" name="action" value="accept_booking">
-                    <input type="hidden" name="booking_id" value="{{ booking.pk }}">
-                    <button type="submit" class="btn-primary px-5 py-2 text-[12px] font-medium uppercase tracking-wider">
-                      <i class="fa fa-check mr-1"></i>Accept
-                    </button>
-                  </form>
-                  <form method="post" onsubmit="return confirm('Reject this booking request?');">
-                    {% csrf_token %}
-                    <input type="hidden" name="action" value="reject_booking">
-                    <input type="hidden" name="booking_id" value="{{ booking.pk }}">
-                    <button type="submit" class="hairline px-5 py-2 text-[12px] font-medium uppercase tracking-wider hover:border-terracotta hover:text-terracotta">
-                      <i class="fa fa-times mr-1"></i>Reject
-                    </button>
-                  </form>
-                </div>
-              {% endif %}
             </article>
           {% empty %}
-            <p class="text-bark text-[14px] mt-4">No booking requests yet.</p>
+            <p class="text-bark text-[14px] mt-4">No accepted or rejected requests yet.</p>
           {% endfor %}
         </div>
       </div>
+    </div>
 
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
       <div>
         <span class="section-tag">Saved Photographers</span>
         <div class="space-y-4 mt-5">
