@@ -197,4 +197,40 @@
     </aside>
   </div>
 </section>
+
+{% if booking_sent %}
+<!-- Booking request sent confirmation popup -->
+<div id="bookingSentPopup" class="fixed inset-0 z-[70] flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Booking request sent">
+  <div class="absolute inset-0 bg-espresso-deep/60 backdrop-blur-sm" onclick="closeBookingSentPopup()"></div>
+
+  <div class="relative w-full max-w-md bg-cream text-center p-8 sm:p-10 shadow-[0_30px_80px_-20px_rgba(42,30,21,0.6)]" style="border: 1px solid rgba(184,149,106,0.35);">
+    <button type="button" onclick="closeBookingSentPopup()" class="absolute top-4 right-4 text-bark hover:text-terracotta text-xl leading-none" aria-label="Close">
+      <i class="fa fa-times"></i>
+    </button>
+
+    <div class="w-16 h-16 mx-auto rounded-full bg-moss/15 flex items-center justify-center">
+      <i class="fa fa-paper-plane text-moss text-2xl"></i>
+    </div>
+    <h2 class="font-display text-3xl italic font-medium mt-5">Your request has been sent</h2>
+    <p class="text-bark text-[14px] leading-relaxed mt-3">
+      {{ photographer.full_name }} has received your booking request and will review it shortly.
+      You'll get an email as soon as they accept or decline.
+    </p>
+    <button type="button" onclick="closeBookingSentPopup()" class="btn-primary mt-7 px-8 py-3 text-[13px] font-medium uppercase tracking-wider">
+      Great, thanks
+    </button>
+  </div>
+</div>
+
+<script>
+  function closeBookingSentPopup() {
+    var popup = document.getElementById('bookingSentPopup');
+    if (popup) popup.remove();
+    // Drop ?booking_sent=1 so a page refresh doesn't reopen the popup.
+    if (window.history.replaceState) {
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+  }
+</script>
+{% endif %}
 {% endblock content %}

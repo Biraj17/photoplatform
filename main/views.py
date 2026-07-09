@@ -3,10 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils import timezone
 
 from accounts.models import Photographer, SavedPhotographer
 
+from .emails import send_new_booking_email
 from .forms import BookingRequestForm, PhotographerSearchForm
 from .models import Offer
 
@@ -53,8 +55,9 @@ def profile_photographer(request, pk=None):
             booking_request = booking_form.save(commit=False)
             booking_request.photographer = photographer
             booking_request.save()
-            messages.success(request, "Your booking request was sent. The photographer can now see it in their dashboard.")
-            return redirect("photographer_profile_detail", pk=photographer.pk)
+            send_new_booking_email(booking_request)
+            redirect_url = reverse("photographer_profile_detail", kwargs={"pk": photographer.pk})
+            return redirect(f"{redirect_url}?booking_sent=1")
 
     is_saved = False
     if request.user.is_authenticated:
@@ -67,6 +70,7 @@ def profile_photographer(request, pk=None):
         "photographer_offers": photographer_offers,
         "booking_form": booking_form,
         "is_saved": is_saved,
+        "booking_sent": request.GET.get("booking_sent") == "1",
     })
 
 

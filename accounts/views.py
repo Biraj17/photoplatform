@@ -34,7 +34,9 @@ OTP_MAX_ATTEMPTS = 5
 
 
 def register(request):
-    return render(request, "accounts/register.html")
+    # The old register page was an empty shell; photographers sign up
+    # through the join flow.
+    return redirect("photographer_join_page")
 
 
 def _generate_otp():
