@@ -31,7 +31,9 @@ class Photographer(models.Model):
     phone = models.CharField(max_length=30, blank=True)
     contact_email = models.EmailField(blank=True)
     bio = models.TextField(blank=True)
-    specialty = models.CharField(max_length=20, choices=SPECIALTY_CHOICES, default="Portrait")
+    # No `choices` constraint: photographers can pick a standard specialty or
+    # type a custom genre of their own (handled in PhotographerProfileForm).
+    specialty = models.CharField(max_length=40, default="Portrait")
     years_experience = models.PositiveSmallIntegerField(default=1)
     price_per_shoot = models.PositiveIntegerField(default=0, help_text="Price in Nepalese Rupees")
     rating = models.DecimalField(max_digits=2, decimal_places=1, default=5.0)

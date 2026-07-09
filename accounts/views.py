@@ -1,6 +1,12 @@
+import secrets
+import time
+
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import check_password, make_password
+from django.contrib.auth.models import User
+from django.db import IntegrityError
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -9,6 +15,7 @@ from main.emails import send_booking_decision_email
 from main.forms import PhotographerOfferForm
 from main.models import BookingRequest
 
+from .emails import send_signup_otp_email
 from .forms import (
     PhotographerJoinForm,
     PhotographerKYCForm,
@@ -16,25 +23,128 @@ from .forms import (
     PhotographerProfileForm,
     PhotographerProjectForm,
     PortfolioImageForm,
+    SignupOTPForm,
 )
 from .models import Photographer
+
+PENDING_SIGNUP_SESSION_KEY = "pending_signup"
+OTP_TTL_SECONDS = 10 * 60
+OTP_RESEND_COOLDOWN_SECONDS = 60
+OTP_MAX_ATTEMPTS = 5
 
 
 def register(request):
     return render(request, "accounts/register.html")
 
 
+def _generate_otp():
+    return f"{secrets.randbelow(1_000_000):06d}"
+
+
+def _start_pending_signup(request, full_name, email, password):
+    code = _generate_otp()
+    if not send_signup_otp_email(email, full_name, code):
+        return False
+    request.session[PENDING_SIGNUP_SESSION_KEY] = {
+        "full_name": full_name,
+        "email": email,
+        "password_hash": make_password(password),
+        "otp_hash": make_password(code),
+        "expires_at": time.time() + OTP_TTL_SECONDS,
+        "last_sent_at": time.time(),
+        "attempts": 0,
+    }
+    return True
+
+
 def photographer_join(request):
     form = PhotographerJoinForm(request.POST or None)
 
     if request.method == "POST" and form.is_valid():
-        photographer = form.save()
-        login(request, photographer.user)
-        messages.success(request, "Your account is ready. Add your contact details and work here.")
-        return redirect("photographer_dashboard")
+        sent = _start_pending_signup(
+            request,
+            form.cleaned_data["full_name"],
+            form.cleaned_data["email"],
+            form.cleaned_data["password"],
+        )
+        if sent:
+            return redirect("verify_signup_email")
+        form.add_error(
+            "email",
+            "We couldn't send a verification code to this address. "
+            "Please check the email and try again.",
+        )
 
     return render(request, "accounts/photographer_join.html", {
         "form": form,
+    })
+
+
+def verify_signup_email(request):
+    pending = request.session.get(PENDING_SIGNUP_SESSION_KEY)
+    if not pending:
+        messages.info(request, "Start by filling in the join form — we'll email you a verification code.")
+        return redirect("photographer_join_page")
+
+    form = SignupOTPForm(request.POST or None)
+
+    if request.method == "POST":
+        if request.POST.get("action") == "resend":
+            if time.time() - pending["last_sent_at"] < OTP_RESEND_COOLDOWN_SECONDS:
+                messages.info(request, "Please wait a minute before requesting a new code.")
+                return redirect("verify_signup_email")
+            code = _generate_otp()
+            if send_signup_otp_email(pending["email"], pending["full_name"], code):
+                pending.update({
+                    "otp_hash": make_password(code),
+                    "expires_at": time.time() + OTP_TTL_SECONDS,
+                    "last_sent_at": time.time(),
+                    "attempts": 0,
+                })
+                request.session[PENDING_SIGNUP_SESSION_KEY] = pending
+                messages.success(request, f"A new code was sent to {pending['email']}.")
+            else:
+                messages.error(request, "We couldn't send the code. Please try again in a moment.")
+            return redirect("verify_signup_email")
+
+        if form.is_valid():
+            if time.time() > pending["expires_at"]:
+                form.add_error("code", "This code has expired. Request a new one below.")
+            elif pending["attempts"] >= OTP_MAX_ATTEMPTS:
+                form.add_error("code", "Too many wrong attempts. Request a new code below.")
+            elif not check_password(form.cleaned_data["code"], pending["otp_hash"]):
+                pending["attempts"] += 1
+                request.session[PENDING_SIGNUP_SESSION_KEY] = pending
+                remaining = OTP_MAX_ATTEMPTS - pending["attempts"]
+                if remaining > 0:
+                    form.add_error("code", f"That code isn't right. {remaining} attempt(s) left.")
+                else:
+                    form.add_error("code", "Too many wrong attempts. Request a new code below.")
+            else:
+                try:
+                    user = User(
+                        username=pending["email"],
+                        email=pending["email"],
+                        password=pending["password_hash"],
+                    )
+                    user.save()
+                except IntegrityError:
+                    del request.session[PENDING_SIGNUP_SESSION_KEY]
+                    messages.error(request, "An account with this email was just created. Try logging in instead.")
+                    return redirect("photographer_login")
+                Photographer.objects.create(
+                    user=user,
+                    full_name=pending["full_name"],
+                    contact_email=pending["email"],
+                )
+                del request.session[PENDING_SIGNUP_SESSION_KEY]
+                login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+                messages.success(request, "Email verified — your account is ready. Add your contact details and work here.")
+                return redirect("photographer_dashboard")
+
+    return render(request, "accounts/verify_email.html", {
+        "form": form,
+        "email": pending["email"],
     })
 
 
@@ -125,6 +235,11 @@ def photographer_dashboard(request):
             if deleted:
                 messages.success(request, "Offer cancelled.")
             return redirect("photographer_dashboard")
+        elif action == "dismiss_new_bookings":
+            photographer.booking_requests.filter(
+                status=BookingRequest.STATUS_PENDING, is_read=False
+            ).update(is_read=True)
+            return redirect("photographer_dashboard")
         elif action in ("accept_booking", "reject_booking"):
             booking = photographer.booking_requests.filter(pk=request.POST.get("booking_id")).first()
             if booking:
@@ -152,6 +267,9 @@ def photographer_dashboard(request):
         "projects": photographer.projects.all(),
         "offers": photographer.offers.all(),
         "booking_requests": photographer.booking_requests.filter(status=BookingRequest.STATUS_PENDING),
+        "new_booking_requests": photographer.booking_requests.filter(
+            status=BookingRequest.STATUS_PENDING, is_read=False
+        ),
         "booking_history": photographer.booking_requests.exclude(
             status=BookingRequest.STATUS_PENDING
         ).order_by("-responded_at"),

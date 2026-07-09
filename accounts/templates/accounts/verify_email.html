@@ -1,0 +1,161 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verify your email — PhotoPlat</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          cream: '#F5F0E8',
+          parchment: '#EDE5D4',
+          sand: '#D9CABA',
+          terracotta: { DEFAULT: '#C1684C', dark: '#A85339' },
+          espresso: { DEFAULT: '#3B2B1F', deep: '#2A1E15' },
+          bark: '#7A5C3E',
+          clay: '#B8956A',
+          moss: '#6B7A5E',
+          sage: '#9DAF8E'
+        },
+        fontFamily: {
+          display: ['"Cormorant Garamond"', 'serif'],
+          sans: ['Jost', 'sans-serif']
+        },
+        borderRadius: { DEFAULT: '2px' }
+      }
+    }
+  }
+</script>
+
+<style>
+  body { font-family: 'Jost', sans-serif; background: #F5F0E8; color: #3B2B1F; }
+  .font-display { font-family: 'Cormorant Garamond', serif; }
+
+  .section-tag {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    font-family: 'Jost', sans-serif; font-size: 0.72rem; font-weight: 600;
+    letter-spacing: 0.22em; text-transform: uppercase; color: #C1684C;
+  }
+  .section-tag::before {
+    content: ""; display: inline-block; width: 22px; height: 1px; background: #C1684C;
+  }
+
+  .hairline { border: 1px solid rgba(184, 149, 106, 0.2); }
+
+  .brand-logo { width: 2.25rem; height: 2.25rem; object-fit: contain; border-radius: 2px; }
+
+  a, button, input { transition: all 0.2s ease; }
+  a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 2px solid #C1684C; outline-offset: 2px;
+  }
+
+  .btn-primary {
+    background: #C1684C; color: #F5F0E8; border-radius: 2px;
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .btn-primary:hover {
+    background: #A85339; transform: translateY(-2px);
+    box-shadow: 0 10px 24px -10px rgba(59,43,31,0.35);
+  }
+  .btn-primary:active { transform: translateY(0); }
+
+  .field-input {
+    width: 100%; background: #F5F0E8;
+    border: 1px solid rgba(184,149,106,0.3); border-radius: 2px;
+    padding: 0.85rem 1rem; font-family: 'Jost', sans-serif;
+    font-size: 18px; color: #3B2B1F;
+  }
+  .field-input:focus {
+    outline: none; border-color: #C1684C;
+    box-shadow: 0 0 0 3px rgba(193,104,76,0.12);
+  }
+
+  .field-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: #7A5C3E; display: block; margin-bottom: 0.6rem;
+  }
+
+  .error-msg { font-size: 12px; color: #C1684C; margin-top: 0.4rem; min-height: 14px; }
+</style>
+</head>
+
+<body class="text-espresso antialiased">
+
+<div class="min-h-screen flex items-center justify-center p-6">
+  <div class="w-full max-w-md">
+
+    <a href="{% url 'home' %}" class="flex items-center justify-center gap-2.5 mb-10">
+      <img src="{% static 'main/images/photoplat-logo.png' %}" alt="PhotoPlat logo" class="brand-logo">
+      <span class="font-display text-2xl italic font-medium">PhotoPlat</span>
+    </a>
+
+    {% if messages %}
+      <div class="space-y-2 mb-6">
+        {% for message in messages %}
+          <div class="hairline bg-parchment px-5 py-3 text-[14px] text-bark">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="hairline bg-parchment p-8 sm:p-10 text-center">
+      <i class="fa fa-envelope-open-o text-terracotta text-3xl"></i>
+      <span class="section-tag mt-6 justify-center">Verify Your Email</span>
+      <h1 class="font-display text-3xl italic font-medium mt-4">Check your inbox</h1>
+      <p class="text-bark text-[14px] mt-3 leading-relaxed">
+        We sent a 6-digit verification code to<br>
+        <span class="font-medium text-espresso">{{ email }}</span>
+      </p>
+      <p class="text-bark text-[12px] mt-2">The code expires in 10 minutes. Check your spam folder if you can't find it.</p>
+
+      <form method="post" class="mt-8 space-y-4 text-left">
+        {% csrf_token %}
+        <div>
+          <label class="field-label" for="{{ form.code.id_for_label }}">{{ form.code.label }}</label>
+          {{ form.code }}
+          {% if form.code.errors %}
+            <p class="error-msg">{{ form.code.errors.0 }}</p>
+          {% endif %}
+        </div>
+        <button type="submit" class="btn-primary w-full py-3.5 text-[13px] font-medium uppercase tracking-wider">
+          Verify and create account
+        </button>
+      </form>
+
+      <form method="post" class="mt-5">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="resend">
+        <button type="submit" class="text-terracotta text-[13px] font-medium hover:underline">
+          Didn't get it? Send a new code
+        </button>
+      </form>
+    </div>
+
+    <p class="text-center text-bark text-[13px] mt-6">
+      Wrong email? <a href="{% url 'photographer_join_page' %}" class="text-terracotta font-medium hover:underline">Start over</a>
+    </p>
+  </div>
+</div>
+
+<script>
+  const codeInput = document.getElementById('{{ form.code.id_for_label }}');
+  if (codeInput) {
+    codeInput.focus();
+    codeInput.addEventListener('input', () => {
+      codeInput.value = codeInput.value.replace(/\D/g, '').slice(0, 6);
+    });
+  }
+</script>
+
+</body>
+</html>

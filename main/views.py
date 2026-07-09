@@ -83,12 +83,21 @@ def photographers_list(request):
     if query:
         photographers = photographers.filter(full_name__icontains=query)
 
+    standard_specialties = [value for value, _ in Photographer.SPECIALTY_CHOICES]
+    custom_specialties = (
+        Photographer.objects.exclude(specialty__in=standard_specialties)
+        .values_list("specialty", flat=True)
+        .distinct()
+        .order_by("specialty")
+    )
+    specialties = Photographer.SPECIALTY_CHOICES + [(s, s) for s in custom_specialties]
+
     return render(request, "main/photographers.html", {
         "photographers": photographers,
         "active_specialty": specialty,
         "active_location": location,
         "query": query,
-        "specialties": Photographer.SPECIALTY_CHOICES,
+        "specialties": specialties,
     })
 
 

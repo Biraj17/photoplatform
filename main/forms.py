@@ -1,4 +1,8 @@
 from django import forms
+from django.utils import timezone
+
+from accounts.forms import clean_person_name, clean_phone_number
+from accounts.models import Photographer
 
 from .models import BookingRequest, Offer
 
@@ -9,13 +13,7 @@ FIELD_CLASS = "field-input"
 class PhotographerSearchForm(forms.Form):
     specialty = forms.ChoiceField(
         required=False,
-        choices=[("", "All categories")] + [
-            ("Wedding", "Wedding"),
-            ("Portrait", "Portrait"),
-            ("Family", "Family"),
-            ("Fashion", "Fashion"),
-            ("Travel", "Travel"),
-        ],
+        choices=[("", "All categories")] + Photographer.SPECIALTY_CHOICES,
         widget=forms.Select(attrs={"class": "w-full bg-transparent font-display text-lg italic focus:outline-none"}),
     )
     location = forms.CharField(
@@ -46,12 +44,38 @@ class BookingRequestForm(forms.ModelForm):
         }
         widgets = {
             "client_phone": forms.TextInput(attrs={"class": FIELD_CLASS, "placeholder": "+977 ...", "required": True}),
-            "client_name": forms.TextInput(attrs={"class": FIELD_CLASS, "placeholder": "Your name"}),
-            "client_email": forms.EmailInput(attrs={"class": FIELD_CLASS, "placeholder": "you@example.com"}),
-            "shoot_date": forms.DateInput(attrs={"class": FIELD_CLASS, "type": "date"}),
+            "client_name": forms.TextInput(attrs={"class": FIELD_CLASS, "placeholder": "Your name", "required": True}),
+            "client_email": forms.EmailInput(attrs={"class": FIELD_CLASS, "placeholder": "you@example.com", "required": True}),
+            "shoot_date": forms.DateInput(attrs={"class": FIELD_CLASS, "type": "date", "required": True}),
             "package": forms.Select(attrs={"class": FIELD_CLASS}),
-            "message": forms.Textarea(attrs={"class": FIELD_CLASS, "rows": 4, "placeholder": "Tell the photographer about the shoot"}),
+            "message": forms.Textarea(attrs={"class": FIELD_CLASS, "rows": 4, "placeholder": "Tell the photographer about the shoot", "required": True}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # The date picker shouldn't offer days in the past.
+        self.fields["shoot_date"].widget.attrs["min"] = timezone.localdate().isoformat()
+
+    def clean_client_name(self):
+        return clean_person_name(self.cleaned_data["client_name"])
+
+    def clean_client_phone(self):
+        return clean_phone_number(self.cleaned_data["client_phone"])
+
+    def clean_client_email(self):
+        return self.cleaned_data["client_email"].strip().lower()
+
+    def clean_shoot_date(self):
+        shoot_date = self.cleaned_data["shoot_date"]
+        if shoot_date < timezone.localdate():
+            raise forms.ValidationError("The shoot date can't be in the past.")
+        return shoot_date
+
+    def clean_message(self):
+        message = self.cleaned_data["message"].strip()
+        if len(message) < 10:
+            raise forms.ValidationError("Tell the photographer a little more about the shoot (at least 10 characters).")
+        return message
 
 
 class PhotographerOfferForm(forms.ModelForm):
@@ -64,8 +88,30 @@ class PhotographerOfferForm(forms.ModelForm):
             "ends_at": "Valid Until",
         }
         widgets = {
-            "title": forms.TextInput(attrs={"class": FIELD_CLASS, "placeholder": "e.g. Off-season wedding discount"}),
-            "discount_percent": forms.NumberInput(attrs={"class": FIELD_CLASS, "min": 1, "max": 100}),
-            "description": forms.Textarea(attrs={"class": FIELD_CLASS, "rows": 3, "placeholder": "What's included in this offer"}),
-            "ends_at": forms.DateInput(attrs={"class": FIELD_CLASS, "type": "date"}),
+            "title": forms.TextInput(attrs={"class": FIELD_CLASS, "placeholder": "e.g. Off-season wedding discount", "required": True}),
+            "discount_percent": forms.NumberInput(attrs={"class": FIELD_CLASS, "min": 1, "max": 100, "required": True}),
+            "description": forms.Textarea(attrs={"class": FIELD_CLASS, "rows": 3, "placeholder": "What's included in this offer", "required": True}),
+            "ends_at": forms.DateInput(attrs={"class": FIELD_CLASS, "type": "date", "required": True}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["ends_at"].widget.attrs["min"] = timezone.localdate().isoformat()
+
+    def clean_title(self):
+        title = self.cleaned_data["title"].strip()
+        if len(title) < 3:
+            raise forms.ValidationError("Give the offer a title of at least 3 characters.")
+        return title
+
+    def clean_discount_percent(self):
+        discount = self.cleaned_data["discount_percent"]
+        if not 1 <= discount <= 100:
+            raise forms.ValidationError("The discount must be between 1% and 100%.")
+        return discount
+
+    def clean_ends_at(self):
+        ends_at = self.cleaned_data["ends_at"]
+        if ends_at < timezone.localdate():
+            raise forms.ValidationError("The end date can't be in the past.")
+        return ends_at

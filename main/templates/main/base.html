@@ -429,6 +429,16 @@
       observer.disconnect();
     }, 2500);
   })();
+
+  // Date fields: clicking anywhere on the field opens the calendar picker,
+  // not just the tiny calendar icon.
+  document.addEventListener('click', function (e) {
+    var input = e.target.closest && e.target.closest('input[type="date"]');
+    if (!input || input.disabled || input.readOnly) return;
+    if (typeof input.showPicker === 'function') {
+      try { input.showPicker(); } catch (err) { /* needs user gesture or unsupported — native behavior remains */ }
+    }
+  });
 </script>
 
 </body>
