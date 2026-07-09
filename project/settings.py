@@ -167,16 +167,24 @@ if CLOUDINARY_CLOUD_NAME:
     STORAGES['default']['BACKEND'] = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
-# Email (booking accept/reject notifications)
-# Falls back to printing emails to the server console/logs when no SMTP host
-# is configured, so nothing crashes — just doesn't actually deliver mail.
+# Email (signup OTP codes + booking notifications)
+# Preferred: Brevo HTTPS API (BREVO_API_KEY) — Render's free tier blocks all
+# outbound SMTP ports, so SMTP hangs there and mail never leaves the server.
+# Fallbacks: classic SMTP (EMAIL_HOST) for hosts that allow it, then the
+# console backend for local development so nothing crashes.
+BREVO_API_KEY = os.environ.get('BREVO_API_KEY', '')
 EMAIL_HOST = os.environ.get('EMAIL_HOST', '')
-if EMAIL_HOST:
+if BREVO_API_KEY:
+    EMAIL_BACKEND = 'project.email_backend.BrevoEmailBackend'
+elif EMAIL_HOST:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))
     EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
     EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
     EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
+    # Fail fast instead of hanging past gunicorn's 30s worker timeout (which
+    # turns a blocked SMTP port into a 500 error for the visitor).
+    EMAIL_TIMEOUT = int(os.environ.get('EMAIL_TIMEOUT', '10'))
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'PhotoPlat <noreply@photoplat.local>')

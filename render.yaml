@@ -28,6 +28,10 @@ services:
         sync: false
       - key: CLOUDINARY_API_SECRET
         sync: false
+      # Render's free tier blocks outbound SMTP ports, so email is delivered
+      # through Brevo's HTTPS API instead. Set BREVO_API_KEY in the dashboard.
+      - key: BREVO_API_KEY
+        sync: false
       - key: EMAIL_HOST
         value: "smtp.gmail.com"
       - key: EMAIL_PORT

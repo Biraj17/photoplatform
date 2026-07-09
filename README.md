@@ -31,7 +31,7 @@ A photographer booking marketplace for Nepal — browse portfolios by style and 
 - **Backend:** Django 6
 - **Database:** PostgreSQL (production) / SQLite (local dev)
 - **Media storage:** Cloudinary (production) / local disk (local dev)
-- **Email:** SMTP (Gmail) for booking decision notifications
+- **Email:** Brevo HTTPS API (production — Render's free tier blocks SMTP ports) for signup OTP codes and booking notifications; SMTP or console backend for local dev
 - **Static files:** WhiteNoise
 - **Styling:** Tailwind CSS (CDN) with a custom editorial theme
 - **Hosting:** Render (web service + managed Postgres)
@@ -57,7 +57,9 @@ Everything works locally with sane defaults (SQLite, local media storage, consol
 | Variable | Purpose |
 |---|---|
 | `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | Persistent media storage |
-| `EMAIL_HOST`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD` | Real SMTP email delivery |
+| `BREVO_API_KEY` | Real email delivery via Brevo's HTTPS API (needed on Render, whose free tier blocks SMTP ports) |
+| `DEFAULT_FROM_EMAIL` | Sender address — must be a sender verified in your Brevo account |
+| `EMAIL_HOST`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD` | Classic SMTP delivery (only works on hosts that allow outbound SMTP) |
 | `DATABASE_URL` | Point at a Postgres instance instead of SQLite |
 
 ## Deployment
