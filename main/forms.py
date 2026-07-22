@@ -1,7 +1,7 @@
 from django import forms
 from django.utils import timezone
 
-from accounts.forms import clean_person_name, clean_phone_number
+from accounts.forms import clean_email_address, clean_nepali_mobile, clean_person_name
 from accounts.models import Photographer
 
 from .models import BookingRequest, Offer
@@ -43,7 +43,7 @@ class BookingRequestForm(forms.ModelForm):
             "shoot_date": "Preferred Date",
         }
         widgets = {
-            "client_phone": forms.TextInput(attrs={"class": FIELD_CLASS, "placeholder": "+977 ...", "required": True}),
+            "client_phone": forms.TextInput(attrs={"class": FIELD_CLASS, "placeholder": "98XXXXXXXX", "inputmode": "numeric", "maxlength": "14", "required": True}),
             "client_name": forms.TextInput(attrs={"class": FIELD_CLASS, "placeholder": "Your name", "required": True}),
             "client_email": forms.EmailInput(attrs={"class": FIELD_CLASS, "placeholder": "you@example.com", "required": True}),
             "shoot_date": forms.DateInput(attrs={"class": FIELD_CLASS, "type": "date", "required": True}),
@@ -60,10 +60,10 @@ class BookingRequestForm(forms.ModelForm):
         return clean_person_name(self.cleaned_data["client_name"])
 
     def clean_client_phone(self):
-        return clean_phone_number(self.cleaned_data["client_phone"])
+        return clean_nepali_mobile(self.cleaned_data["client_phone"])
 
     def clean_client_email(self):
-        return self.cleaned_data["client_email"].strip().lower()
+        return clean_email_address(self.cleaned_data["client_email"])
 
     def clean_shoot_date(self):
         shoot_date = self.cleaned_data["shoot_date"]

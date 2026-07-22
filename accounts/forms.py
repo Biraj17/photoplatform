@@ -5,6 +5,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.core.validators import EmailValidator
 from django.utils import timezone
 
 from .models import Photographer, PhotographerProject, PortfolioImage
@@ -13,6 +14,33 @@ from .models import Photographer, PhotographerProject, PortfolioImage
 FIELD_CLASS = "field-input"
 
 NAME_RE = re.compile(r"^[A-Za-z][A-Za-z .'\-]{2,}$")
+
+_validate_email = EmailValidator(message="Enter a valid email address, like name@example.com.")
+# A domain must have a name part and a real TLD, e.g. "gmail.com".
+EMAIL_DOMAIN_RE = re.compile(r"^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*\.[a-z]{2,}$")
+
+
+def clean_email_address(value):
+    value = (value or "").strip().lower()
+    if not value:
+        raise ValidationError("Enter an email address.")
+    _validate_email(value)
+    # EmailValidator is lenient about the domain, so double-check it looks
+    # like a real, routable domain with a proper TLD (e.g. "a@b" is rejected).
+    domain = value.rsplit("@", 1)[-1]
+    if ".." in value or not EMAIL_DOMAIN_RE.match(domain):
+        raise ValidationError("Enter a valid email address, like name@example.com.")
+    return value
+
+
+def clean_nepali_mobile(value):
+    digits = re.sub(r"\D", "", value or "")
+    # Accept an optional +977 / 977 country code and normalise it away.
+    if len(digits) == 13 and digits.startswith("977"):
+        digits = digits[3:]
+    if len(digits) != 10 or not digits.startswith("9"):
+        raise ValidationError("Enter a valid 10-digit mobile number starting with 9 (e.g. 98XXXXXXXX).")
+    return digits
 
 
 def clean_person_name(value, field_label="name"):
